@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "handle_dictionary_content.h": "c",
+        "fcntl.h": "c"
+    }
+}
