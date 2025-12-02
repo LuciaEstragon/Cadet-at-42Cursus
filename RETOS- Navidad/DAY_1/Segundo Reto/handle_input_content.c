@@ -6,7 +6,7 @@
 /*   By: lestrada <lestrada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:30:16 by lestrada          #+#    #+#             */
-/*   Updated: 2025/12/01 20:57:36 by lestrada         ###   ########.fr       */
+/*   Updated: 2025/12/02 15:06:54 by lestrada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,79 +15,83 @@
 
 void find_numb(char *input)
 {
-	int code = 55;
-	int count = 0;
+	int code = 50;
+	long count = 0;
 	int numero = 0;
+	int code_ant = 50;
 	int neg = 1;
 	int dig = 1;
 
 	int ind = 0;
 	int sub_ind = 0;
-	write(1, "HOLA MARIA\n", 17);
+	write(1, "ENTRA! \n\n", 11);
 	while (input[ind] != '\0')
 	{
-		printf("LUCIA");
 		sub_ind = 0;
 		neg = 1;
 		dig = 1;
 		numero = 0;
-		// printf("Input %c %c %c %c %c %c FIN\n", input[ind], input[ind+1], input[ind+2], input[ind+3], input[ind+4], input[ind+5]);
 		while (input[ind] != '\n' /*|| input[ind] != '\0'*/)
 		{
 			sub_ind++;
 			ind++;
-			// printf("SUB_INDICE %d \n", sub_ind);
 		}
-		printf("INDICE %d \n", ind);
-		// fill_info_numb(input[ind - sub_ind], sub_ind);
+		
 		if (input[ind - sub_ind] == 'L')
 			neg = -1;
-		printf("%d \n", neg);
-		printf("sub_ind  %d \n", sub_ind);
-		printf("ind  %d \n", ind);
-		/*while (sub_ind -2 != 0)
-		{
-			char caracter = input[sub_ind-1];
-			int num = caracter -'0';
-			numero = numero + (num) * dig;
-			dig = 10 * dig;
-			sub_ind--;
-			char caracter = input[ind];
-			int num = caracter -'0';
-			numero = numero + (num) * dig;
-			dig = 10 * dig;
-			ind--;
-		}*/
-		int contar = 2;
+		//printf("es neg? %d \n", neg);
+		//printf("sub_ind = %d \n", sub_ind);
+		//printf("ind = %d \n", ind);
+		int contar = 1;
 		while (sub_ind - 1 != 0)
 		{
-			contar--;
-			char caracter = input[sub_ind - 1];
+			char caracter = input[ind - contar];
 			int num = caracter - '0';
 			numero = numero + (num)*dig;
 			dig = 10 * dig;
 			sub_ind--;
+			contar++;
 		}
-		printf("ind = %d \n", ind);
 		numero = numero * neg;
 		printf("numero = %d \n", numero);
 		code = code + numero;
-		// while (code > 99 && code < 0)// (code !=0)
+		printf("code ant = %d \n", code_ant);
+		int flag = 0;
+		while (code > 99 || code < 0)// (code !=0)
 		{
 			if (code > 99)
-			{
-				count++;
-				code -= 99;
-			}
+				code -= 100;
 			if (code < 0)
+				code += 100;
+			/* SEGUNDO EJERCICIO */
+			if((flag==0 && code_ant==0) || code==0)
 			{
+				flag=1; //para evitar este bucle
+				printf(" code_ant==0 o se va a subar luego code==0\n");
+			}else
+			{
+				printf(" === CUENTA 0 === \n");
 				count++;
-				code += 99;
 			}
 		}
+		/* PRIMER EJERCICIO */
+		if(code == 0)
+		{
+			count++;
+			printf(" === CUENTA 0 cuando pasa por el cero === \n");
+			if(flag==1)
+			count++;
+		}
+		/* SEGUNDO EJERCICIO */
+		code_ant = code;
 		printf("code = %d \n", code);
-	}
-	ind++;
+		ind++;
 
-	printf("%d", count);
+		printf("\n COUNT RONDA: %ld \n", count);
+	}
+
+	printf("\n RESULTADO: %ld \n", count);
+
+	printf("\n RESULTADO: FIN OK\n");
+	
 }

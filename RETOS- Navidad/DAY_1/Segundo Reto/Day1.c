@@ -8,7 +8,7 @@ int main(void)
 	char *file_name;
 	char dictionary[16500];
 
-	file_name = "./numbers";
+	file_name = "./numbers_VALORES";
 	if (handle_file_content(file_name, dictionary) == -1)
 		write(2, "Dict Error\n", 12);
 	else
@@ -16,5 +16,6 @@ int main(void)
 	write(1, "HOLA MUNDO\n", 17);
 	find_numb(dictionary);
 	printf("ADIOS");
+	printf("\n RESULTADO: FIN OK\n");
 	return (0);
 }

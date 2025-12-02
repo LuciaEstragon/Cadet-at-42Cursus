@@ -6,7 +6,7 @@
 /*   By: lestrada <lestrada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 18:38:24 by igomez-c          #+#    #+#             */
-/*   Updated: 2025/12/01 18:52:17 by lestrada         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:17:59 by lestrada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	handle_file_content(char *file, char *dictionary)
 {
-	char	buffer[16500];
+	char	buffer[165000];
 	int		file_read;
 
-	file_read = open_and_read_file(file, buffer, 16500);
+	file_read = open_and_read_file(file, buffer, 165000);
 	if (file_read == -1)
 		return (-1);
 	copy_string(dictionary, buffer);
