@@ -3,10 +3,10 @@ EXEC = rush-01
 
 # Compilador y sus flags
 CC = cc
-CFLAGS = -g #-Wall -Werror -Wextra
+CFLAGS = -g -Wall -Werror -Wextra
 
 # Archivos fuente
-SRCS = Day2.c handle_file_content.c handle_input_content.c
+SRCS = Day3.c handle_file_content.c handle_input_content.c
 OBJS = $(SRCS:.c=.o)
 
 # Archivos de entrada

@@ -12,78 +12,68 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+
+int init_numbers(char *input, int *start_num, int *end_num)
+{
+	int i = 0;
+	while (input[i] != '-')
+		i++;
+	start_num = (int *)malloc(i);
+	i++;
+	while (input[i] != ',')
+		i++;
+	end_num = (int *)malloc(i);
+	i++;
+	return (i);
+}  // en esta funcion alloco los numeros de entradas
 
 void find_numb(char *input)
 {
-	int code = 50;
-	long count = 0;
-	int numero = 0;
-	int code_ant = 50;
-	int neg = 1;
-	int dig = 1;
+	int *start_num;
+	int *end_num;
 
 	int ind = 0;
 	int sub_ind = 0;
-	write(1, "ENTRA! \n\n", 11);
-	while (input[ind] != '\0')
+	int sub_ind2 = 0;
+	write(1, "ENTRA! \n\n", 8);
+	while (input[ind] != 'p')
 	{
-		sub_ind = 0;
-		neg = 1;
-		dig = 1;
-		numero = 0;
-		while (input[ind] != '\n' /*|| input[ind] != '\0'*/)
+		int i = 0;
+		while (input[i] != '-')
+			i++;
+		start_num = (int *)malloc(i);
+		i++;
+		while (input[i] != ',')
+			i++;
+		end_num = (int *)malloc(i);
+		i++;
+		/// compruebo que hasta aqui todo bien
+		printf("%d%d", start_num[0], start_num[1]);
+		printf("%d%d", end_num[0], end_num[1]);
+	/*
+		ind = init_numbers(input,start_num, end_num);
+		/// compruebo que hasta aqui todo bien
+		//printf("%d%d", start_num[0], start_num[1]);
+		//printf("%d%d", end_num[0], end_num[1]);
+		sub_ind = sizeof(start_num);
+		int i = 0;
+		while(sub_ind > i)
 		{
-			sub_ind++;
-			ind++;
+			printf("%d", start_num[i]);
+			i++;
 		}
-		
-		if (input[ind - sub_ind] == 'L')
-			neg = -1;
-		//printf("es neg? %d \n", neg);
-		//printf("sub_ind = %d \n", sub_ind);
-		//printf("ind = %d \n", ind);
-		int contar = 1;
-		while (sub_ind - 1 != 0)
+		sub_ind2 = sizeof(end_num);
+		i = 0;
+		while(sub_ind2 > i)
 		{
-			char caracter = input[ind - contar];
-			int num = caracter - '0';
-			numero = numero + (num)*dig;
-			dig = 10 * dig;
-			sub_ind--;
-			contar++;
+			printf("%d", end_num[i]);
+			i++;
 		}
-		numero = numero * neg;
-		printf("numero = %d \n", numero);
-		code = code + numero;
-		printf("code ant = %d \n", code_ant);
-		while (code > 99 || code < 0)// (code !=0)
-		{
-			if (code > 99)
-				code -= 100;
-			if (code < 0)
-				code += 100;
-			/* SEGUNDO EJERCICIO */
-			/*if(code_ant==0 || code==0)
-				printf(" code_ant==0 o se va a subar luego code==0\n");
-			else
-			{
-				printf(" === CUENTA 0 === \n");
-				count++;
-			}*/
-		}
-		/* PRIMER EJERCICIO */
-		if(code == 0)
-		{
-			count++;
-			printf(" === CUENTA 0 cuando pasa por el cero === \n");
-		}
-		/* SEGUNDO EJERCICIO */
-		code_ant = code;
-		printf("code = %d \n", code);
-		ind++;
-
-		printf("\n COUNT RONDA: %ld \n", count);
+		///////////
+	*/
 	}
 
-	printf("\n RESULTADO: %ld \n", count);
+	printf("\n RESULTADO: \n");
 }
