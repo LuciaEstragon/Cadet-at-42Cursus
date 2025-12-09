@@ -14,46 +14,64 @@
 #include <unistd.h>
 #include "get_next_line.h"
 
-int	handle_file_content(char *file, char *dictionary)
-{
-	char	buffer[165000];
-	int		file_read;
 
-	file_read = open_and_read_file(file, buffer, 165000);
-	if (file_read == -1)
-		return (-1);
-	copy_string(dictionary, buffer);
-	return (1);
+/*
+GET_NEXT_LINE
+1) leo un determinado numero de caracteres del fichero (BUFFER_SIZE)
+	read_line(file, save);
+	1- leo de fichero BUFFER_SIZE caracteres
+	2- lo almaceno en str.
+	3- lo sumo a save (si save no tenia nada es de tamaño 1)
+
+2) crear una linea
+	make_line(save);
+	1- veo el contenido de todo lo que he guardado hasta que encuentro /n
+	  si lo encuentro: hasta aqui es mi nueva linea, lo demas lo guardo
+	  si no lo encuentro: se me va a devolver save entero
+	2- todo lo que no este guardado en line va a ser para guardar
+	  cojo desde la direccion de save(ind_maximo_linea) y la vuelvo a guardar en save.
+	  Ejemplo: hola que tal?\n yo bien graci- 
+	  line= hola que tal?
+	  save= yo bien graci-
+		* si no hubiera encontrado el salto de linea = strlen(linea)==strlen(save)  => no copiar nada en save ya es todo
+
+
+*/
+ 
+char	*get_next_line(int file)
+{
+	char		*line;
+	static char	*save;
+
+	//if (file == -1)
+	//	return (-1);
+	file_read = read_line(file, save);
+	line = make_line(save);
+	return (line);
 }
 
-int	open_and_read_file(char *file, char *buffer, int b_size)
+char *read_line(int file, char *save)
 {
-	int	file_ref;
-	int	file_read;
+	char	*str;
+	int	size_str;
 
-	file_ref = open(file, O_RDONLY);
-	if (file_ref == -1)
-		return (-1);
-	file_read = read(file_ref, buffer, b_size - 1);
-	if (file_read == -1)
-	{
-		close(file_ref);
-		return (-1);
-	}
-	buffer[file_read] = '\0';
-	close(file_ref);
-	return (file_read);
+	if (!save)
+        save = ft_calloc(1, 1);
+    str = ft_calloc(sizeof(char), BUFFER_SIZE + 1);
+	size_str = read(file, str, BUFFER_SIZE + 1);
+	if(size_str < 0)
+		return (NULL);
+	ft_strjoin(save, str);
+	return (str);
 }
 
-void	copy_string(char *dest, char *src)
+char	*make_line(char *save)
 {
-	int	i;
-
-	i = 0;
-	while (src[i] != '\0')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
+	char *line;
+	line = (char *)ft_calloc(1, 1);
+	line = *ft_strchr(save, '\n');
+	//if (ft_strlen(line) != ft_strlen(save))
+	//	ft_memmove(save, save, size_t n)
+	save = *ft_substr(save, (int)ft_strlen(line), (int)ft_strlen(save));
+	return (line);
 }

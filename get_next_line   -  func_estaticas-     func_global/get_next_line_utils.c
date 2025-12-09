@@ -12,46 +12,71 @@
 
 #include "get_next_line.h"
 
-int	handle_file_content(char *file, char *dictionary)
+char    *ft_strchr(const char *s, int c)
 {
-	char	buffer[165000];
-	int		file_read;
-
-	file_read = open_and_read_file(file, buffer, 165000);
-	if (file_read == -1)
-		return (-1);
-	copy_string(dictionary, buffer);
-	return (1);
+        while (*s != '\0')
+        {
+                if (*s == (char)c)
+                        return ((char *)s);
+                s++;
+        }
+        if ((char)c == '\0')
+                return ((char *)s);
+        return (0);
 }
 
-int	open_and_read_file(char *file, char *buffer, int b_size)
+char    *ft_substr(char const *s, unsigned int start, size_t len)
 {
-	int	file_ref;
-	int	file_read;
+        char    *sub;
+        size_t  i;
+        size_t  s_len;
 
-	file_ref = open(file, O_RDONLY);
-	if (file_ref == -1)
-		return (-1);
-	file_read = read(file_ref, buffer, b_size - 1);
-	if (file_read == -1)
-	{
-		close(file_ref);
-		return (-1);
-	}
-	buffer[file_read] = '\0';
-	close(file_ref);
-	return (file_read);
+        if (!s)
+                return (NULL);
+        s_len = ft_strlen(s);
+        if ((size_t)start >= s_len)
+        {
+                len = 0;
+                start = 0;
+        }
+        else if (len > s_len - (size_t)start)
+                len = s_len - start;
+        sub = malloc(sizeof(char) * (len + 1));
+        if (!sub)
+                return (NULL);
+        i = 0;
+        while (i < len && s[(size_t)start + i])
+        {
+                sub[i] = s[(size_t)start + i];
+                i++;
+        }
+        sub[i] = '\0';
+        return (sub);
 }
 
-void	copy_string(char *dest, char *src)
+void    *ft_calloc(size_t nmemb, size_t size)
 {
-	int	i;
+        char    *str;
+        size_t  len;
 
-	i = 0;
-	while (src[i] != '\0')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
+        len = nmemb * size;
+        str = (char *)malloc(len);
+        if (!str)
+                return (NULL);
+        ft_bzero(str, len);
+        return ((void *)str);
+}
+
+void    ft_bzero(void *s, size_t n)
+{
+        unsigned char   *ptr;
+        size_t                  i;
+
+        ptr = (unsigned char *)s;
+        i = 0;
+        while (i < n)
+        {
+                ptr[i] = '\0';
+                i++;
+        }
 }

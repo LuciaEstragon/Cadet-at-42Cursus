@@ -1,16 +1,16 @@
 # Nombre del ejecutable
-EXEC = gnl
+EXEC = rush
 
 # Compilador y sus flags
 CC = cc
 CFLAGS = -g -Wall -Werror -Wextra
 
 # Archivos fuente
-SRCS = main.c get_next_line.c get_next_line_utils.c
+SRCS = Day6.c handle_file_content.c handle_input_content.c
 OBJS = $(SRCS:.c=.o)
 
 # Archivos de entrada
-FILES = prb_file
+FILES = numbers.dict numbers
 
 # Regla por defecto
 all: $(EXEC)
@@ -20,7 +20,7 @@ $(EXEC): $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) -o $(EXEC)
 
 # Regla para compilar los archivos .c en .o
-%.o: %.c unistd.h stdio.h stdlib.h get_next_line.h
+%.o: %.c unistd.h stdio.h stdlib.h handle_file_content.h
 	$(CC) $(CFLAGS) -c $<
 
 # Regla para limpiar todo, incluyendo el ejecutable
@@ -35,9 +35,4 @@ fclean:clean
 run: $(EXEC)
 	./$(EXEC) $(FILES)
 
-re: fclean all
-
-nor:
-	norminette -R CheckForbiddenSourceHeader
-
-.PHONY: all re clean fclean run nor
+.PHONY: all clean run

@@ -1,30 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lestrada <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/05 13:16:29 by lestrada          #+#    #+#             */
-/*   Updated: 2025/12/05 13:17:31 by lestrada         ###   ########.fr       */
+/*   Created: 2025/10/16 17:42:21 by lestrada          #+#    #+#             */
+/*   Updated: 2025/10/16 18:00:18 by lestrada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
-int main(void)
+void	ft_putendl_fd(char *s, int fd)
 {
-	char *file_name;
-	int file_ref;
-	//char dictionary[16500];
-
-	file_name = "./numbers_CLAVE";
-	file_ref = open(file_name, O_RDONLY);
-	if (file_ref == -1)
-		return (-1);
-	get_next_line(file_ref);
-	write(1, "HOLA MUNDO\n", 12);
-	//find_numb(dictionary);
-	//printf("ADIOS");
-	return (0);
+	ft_putstr_fd(s, fd);
+	write(fd, "\n", 1);
 }
