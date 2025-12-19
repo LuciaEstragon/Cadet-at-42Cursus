@@ -1,0 +1,7 @@
+vs02/3 - añado las funciones necesarias en mi libft
+vs04 - pasa la norminette, no el paco .. esta compentado %X
+
+vs05 - se modifica la libft para tener reutrn de int en todas las funciones
+     - funciona el -makefile, funciona el paco (co ERRORES)
+
+vs06 - arreglar el paco
