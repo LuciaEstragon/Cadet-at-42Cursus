@@ -6,7 +6,7 @@
 /*   By: lestrada <lestrada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/19 17:08:20 by lestrada         ###   ########.fr       */
+/*   Updated: 2025/12/21 12:15:37 by lestrada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ char	*get_next_line(int file)
 	//if (file == -1)
 	//	return (-1);
 	save = read_file(file, save);
-	line = make_line(save);
-	printf("SAVE3 %s\n", save);
+	line = make_line(&save);
+	printf("SAVE-FIN %s\n", save);
 	return (line);
 }
 
@@ -55,7 +55,6 @@ char	*read_file(int file, char *save)
 {
 	char	*str;
 	int		size_str;
-	char	*save_new;
 
 	if (!save)
 		save = (char *)ft_calloc(sizeof(char), 1);
@@ -63,26 +62,24 @@ char	*read_file(int file, char *save)
 	size_str = read(file, str, BUFFER_SIZE);
 	if (size_str < 0)
 		return (NULL);
-	printf("SAVE2 %s\n", save);
-	save_new = ft_strjoin(save, str);
-	free(save);
-	return (save_new);
+	printf("SAVE-OLD %s\n", save);
+	save = ft_strjoin(save, str);
+	printf("SAVE-NEW %s\n", save);
+	return (save);
 }
 
-char	*make_line(char *save)
+char	*make_line(char **save)
 {
 	char	*line;
 	char	*save_aux;
 
-	save_aux = save;
 	line = (char *)ft_calloc(1, 1);
-	printf("SAVE0 %s\n", save);
-	save = ft_strchr(save, '\n');
-	printf("SAVEALL %s\n", save_aux);
-	line = ft_substr(save_aux, 0, (int)ft_strlen(save));
-	//save = (char *)ft_calloc(sizeof(char), BUFFER_SIZE + 1);
-	//save = ft_strjoin(save, save_new);
+	save_aux = ft_strchr(*save, '\n');
+	printf("SAVE_aux %s\n", save_aux);
+	printf("SAVE %s\n", *save);
+	line = ft_substr(*save, 0, (int)ft_strlen(*save)-(int)ft_strlen(save_aux));
 	printf("LINE %s\n", line);
-	printf("SAVE1 %s\n", save);
+	*save = ft_substr(save_aux, 1, (int)ft_strlen(save_aux));
+	printf("SAVE %s\n", *save);
 	return (line);
 }

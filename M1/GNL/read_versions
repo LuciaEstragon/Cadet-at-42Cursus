@@ -3,4 +3,32 @@ vs01
 vs02 - errores - La linea guardada y la linea leida no corresponde
 	- paco intenta cosas
 
-vs03 - 
+vs03 - ssouciono el devolver por valor y por parametro - funciion make_line devueve por parametro y por valor
+
+vs04 : ya funciona guay - no pasa la norminette por errores en la lectura de la ultia linea
+
+vs05 : ya funciona guay - no pasa la norminette por errores en la lectura de la ultia linea
+		la descarto - el poner una funcion distinta para leer la ultima inea no va bien a la larga
+		
+v06 - hibrido de vs04 y vs03
+	v06_0 - funciona para el main antiguo, pero para el main moderno no va porque solo lee una linea. 
+		El problema es que yo no tengo una condicion SANA para salir de la lectura del gnl. 
+		como quiero que me lea el fd hasta el final, en la funcion read tengo que hacer un buclee para leer
+		 hasta el final
+		FUNCIONAMIENTO:
+		-entro getline()
+		 - entro en el read -> lee un tamaño BUFFER y lo guarda en un acumulado
+		 - entro en el make_line ->   si veo \n separa line de save
+		 				si no todo se queda guardado como save
+		 - termina el programa devolviendo line o nada, si toodo era save 
+		
+	v06_1 - para hacer bien la lectura del gnl deberia no retornar 0 cuando en el make no encuentra \n
+			-- corregido. solo con un bucle while(!ft_strchr(save, '\n')) en read_file
+		- falla en la lectura de la ultima linea
+			-- corregido. if (size_str <= 0)  return (save);
+	--FUNCIONA - no va el paco
+
+v07 - solucionados los leaks - pasa el paco - timeout
+
+	
+

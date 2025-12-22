@@ -6,18 +6,28 @@
 /*   By: lestrada <lestrada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 12:30:28 by lestrada          #+#    #+#             */
-/*   Updated: 2025/12/19 20:12:54 by lestrada         ###   ########.fr       */
+/*   Updated: 2025/12/22 17:48:35 by lestrada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	*wrapper_toupper(unsigned int i, char *c)
+/*
+static char	*wrapper_toupper(unsigned int i, char *c)
 {
 	(void)i;
 	if (c)
 		*c = (char)ft_toupper((int)*c);
 	return (c);
+}*/
+
+static int	ft_putstr_free(char *str)
+{
+	int	len;
+
+	len = ft_putstr(str);
+	free(str);
+	return (len);
 }
 
 static int	function_types(char const *s, va_list arg)
@@ -25,26 +35,25 @@ static int	function_types(char const *s, va_list arg)
 	if (*s == '%')
 		return (ft_putchar('%'));
 	if (*s == 'd' || *s == 'i')
-		return (ft_putnbr(va_arg(arg, int)));
+		return (ft_putstr_free(ft_itoa_base(va_arg(arg, int), 10)));
 	if (*s == 'c')
 		return (ft_putchar((char) va_arg(arg, int)));
 	if (*s == 's')
 		return (ft_putstr(va_arg(arg, char *)));
 	if (*s == 'u')
-		return (ft_putnbr(va_arg(arg, unsigned int)));
+		return (ft_putstr_free(ft_itoa_base(va_arg(arg, unsigned int), 10)));
 	if (*s == 'x')
-		return (ft_putstr(ft_itoa_base(va_arg(arg, int), 16)));
+		return (ft_putstr_free(ft_itoa_base(va_arg(arg, int), 16)));
 	if (*s == 'X')
-		return (ft_putstr(ft_itoa_base(va_arg(arg, int), 16)));
-		 //ft_strmapi(ft_itoa_base(va_arg(arg, int), 16), &wrapper_toupper)));
+		return (ft_putstr_free(ft_itoa_base(va_arg(arg, int), 16)));
 	if (*s == 'p')
 	{
 		write(1, "0x", 2);
-		return (ft_putstr(ft_itoa_base(va_arg(arg, int), 16)) + 2);
+		return (ft_putstr_free(ft_itoa_base(va_arg(arg, int), 16)) + 2);
 	}
 	return (0);
 }
-
+//ft_strmapi(ft_itoa_base(va_arg(arg, int), 16), &wrapper_toupper)));
 
 int	ft_printf(char const *s, ...)
 {
