@@ -28,7 +28,7 @@ v06 - hibrido de vs04 y vs03
 			-- corregido. if (size_str <= 0)  return (save);
 	--FUNCIONA - no va el paco
 
-v07 - solucionados los leaks - pasa el paco - timeout
+v07 - solucionados los leaks - pasa el paco - timeout - ERRORES DE LEAKS EN EL FSOARES
 
 	
 

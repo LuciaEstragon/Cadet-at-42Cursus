@@ -5,7 +5,11 @@ vs05 - se modifica la libft para tener reutrn de int en todas las funciones
      - funciona el -makefile, funciona el paco (co ERRORES)
 
 vs06 - arreglado el paco - leaks y errores de lectura
-vs7 - arreglar el paco (2) -- mirar bien las funciones internas que has cambiado, los limie
+vs7 - arreglar el paco (2) - arreglo casi todo, excepto "p" y cambio de hex a HEX - mapi
+vs8 - version nuevaa
+
+
+
 
 1) PROBLEMA CON putnmb 
 //return (ft_putnbr(va_arg(arg, int)));
