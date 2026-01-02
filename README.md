@@ -2,6 +2,7 @@
 This could be a template for creating my 42 readme files.
 This section provides a brief summary of what the project does.
 > *Your documentation is a direct reflection of your software, so hold it to the same standards.*
+
 People who read a readme expect:
 1.Does this solve my problem?
 2.Can I use this code?
