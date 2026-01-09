@@ -1,0 +1,41 @@
+Ejemplo:
+Supongamos que tienes un archivo calculadora.c con una función calcular_total() que es muy compleja. Puedes dividirla así:
+C
+
+// En calculadora.c
+
+// Función auxiliar para validar un número
+static int validar_numero(int numero) {
+    // Lógica de validación...
+    return 1; // 1 si es válido, 0 si no
+}
+
+// Función auxiliar para realizar la suma
+static int sumar(int a, int b) {
+    return a + b;
+}
+
+// Función principal que usa las auxiliares
+int calcular_total(int num1, int num2) {
+    if (!validar_numero(num1) || !validar_numero(num2)) {
+        return -1; // Error
+    }
+    return sumar(num1, num2);
+}
+
+En este ejemplo, validar_numero() y sumar() son funciones auxiliares static 
+y solo pueden ser llamadas dentro de calculadora.c.
+
+La función calcular_total() sí puede ser utilizada por otros archivos del proyecto.
+
+¿Por qué usar static?
+1. Modularidad: Divide una función grande y compleja en funciones más pequeñas y manejables, lo que facilita la comprensión y el mantenimiento del código.
+2. Encapsulamiento: Al usar static, las funciones auxiliares no son accesibles desde otros archivos del proyecto. Esto es útil cuando una función solo 
+tiene sentido en el contexto de otras funciones dentro del mismo archivo y no debe ser utilizada por el resto del programa.
+3. Evitar conflictos de nombres: Previene que las funciones auxiliares tengan el mismo nombre que otras funciones en diferentes archivos del proyecto, lo que podría generar errores de enlace (linking errors).
+
+
+Ejemplos prácticos
+- Contador de llamadas: Un ejemplo común es usar static con una variable local para contar cuántas veces se ha llamado a una función, ya que su valor no se reinicia en cada llamada. 
+- Funciones y variables de utilidad internas: Puedes usar static para declarar funciones o variables que son utilidades internas de un archivo específico y no deben ser accesibles desde fuera de él, promoviendo así el encapsulamiento. 
+En resumen, static en C es una herramienta versátil que te permite controlar tanto el alcance (dónde se puede ver) como la duración (cuánto tiempo existe) de las variables y funciones. 

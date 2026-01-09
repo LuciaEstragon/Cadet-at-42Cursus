@@ -6,8 +6,18 @@ vs05 - se modifica la libft para tener reutrn de int en todas las funciones
 
 vs06 - arreglado el paco - leaks y errores de lectura
 vs7 - arreglar el paco (2) - arreglo casi todo, excepto "p" y cambio de hex a HEX - mapi
-vs8 - version nuevaa
-
+vs8 - error en p - error en s de leak - falta norminete para X - error en algo del putnbr_16 (no es importante)
+vs9 - funciona perfecto x y X. FALTA
+	Errors found:
+	For /home/lestrada/francinette/tests/printf/printfTester/tests/s_test.cpp:
+	36:     TEST(10, print(" NULL %s NULL ", NULL));
+	For /home/lestrada/francinette/tests/printf/printfTester/tests/p_test.cpp:
+	30:     TEST(6, print(" %p %p ", LONG_MIN, LONG_MAX));
+	32:     TEST(8, print(" %p %p ", ULONG_MAX, -ULONG_MAX));
+	33:     TEST(9, print(" %p %p ", 0, 0));
+vs10 - todo okey, no ppasa la norminette
+vs11 - version limpita de comentarios, todo okey - NO pasa norminette
+vs11 - entrega (elimino la lib, cojo solo las funciones que me interesan - ajusto para pasar norminette
 
 
 

@@ -1,0 +1,13 @@
+Genera la librería estática con ar:
+
+Usa el comando ar para crear la librería. Los comandos r, c y s son comunes:
+  r: Inserta (reemplaza si existen) los archivos objeto en la librería.
+  c: Crea la librería si no existe.
+  s: Crea o actualiza el índice de símbolos de la librería (necesario para la correcta vinculación).
+Sintaxis: ar rcs libnombre.a archivo1.o archivo2.o ...
+
+ar rcs libft.a ft_isalpha.o ft_isdigit.o ...
+
+Para crear una libreria estatica robusta usar STTIC.
+Las librerias se crean con comando AR.
+ Poner ar rcs nombreLibreria.a 

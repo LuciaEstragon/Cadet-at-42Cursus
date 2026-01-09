@@ -1,0 +1,36 @@
+# ************************** #
+#                                MAKEFILE LIBFT      make                          #
+# ************************** #
+NAME    = libft.a
+# ------------------------------
+# Fuentes de la libft (parte obligatoria)
+SRCS = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c ft_tolower.c ft_toupper.c \
+	ft_strlen.c ft_strchr.c ft_strrchr.c ft_strlcpy.c ft_strnstr.c \
+	ft_atoi.c ft_putnbr_fd.c ft_putstr_fd.c ft_putchar_fd.c \
+	ft_memset.c ft_bzero.c
+# Si aún no tienes las bonus, déjalo así. Si las tienes, añádelas.
+BONUS_SRC = ft_isalpha.c
+# ------------------------------
+OBJECTS = $(SOURCE:.c=.o)
+BONUS_OBJ = $(BONUS_SRC:.c=.o)
+CC      = cc
+CFLAGS  = -Wall -Wextra -Werror
+RM      = rm -f
+# ------------------------------
+all: $(NAME)
+$(NAME): $(OBJECTS)
+	@echo "Compilando libft..."
+	ar rcs $(NAME) $(OBJECTS)
+	@echo "✅ libft.a creado correctamente."
+bonus: $(OBJECTS) $(BONUS_OBJ)
+	ar rcs $(NAME) $(OBJECTS) $(BONUS_OBJ)
+libft.so: $(SOURCE)
+	$(CC) -nostartfiles -fPIC -shared -o libft.so $(SOURCE)
+so: libft.so
+clean:
+	$(RM) $(OBJECTS) $(BONUS_OBJ)
+fclean: clean
+	$(RM) $(NAME)
+	$(RM) libft.so
+re: fclean all
+.PHONY: all clean fclean re bonus

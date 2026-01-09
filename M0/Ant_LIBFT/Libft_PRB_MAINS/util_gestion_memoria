@@ -1,0 +1,61 @@
+Funciones memcpy y memmmove
+
+//  --
+// COMO SABEMOS SI HAY SoLAPAMIENTOS DE MEMORIA
+//  --
+
+#include <stdio.h>
+#include <string.h>
+
+int hay_solapamiento(const void *dest, const void *src, size_t n) {
+    char *d = (char *)dest;
+    char *s = (char *)src;
+    
+    // Verificar si las áreas se solapan
+    if (s < d && s + n > d) {
+        return 1; // Solapamiento: src empieza antes y se extiende hasta dest
+    }
+    if (d < s && d + n > s) {
+        return 1; // Solapamiento: dest empieza antes y se extiende hasta src
+    }
+    return 0; // No hay solapamiento
+}
+
+int main() {
+    char buffer[20] = "abcdefghij";
+    
+    // Caso 1: Solapamiento (peligroso)
+    printf("Caso 1 - Solapamiento: %d\n", 
+           hay_solapamiento(buffer + 2, buffer, 5));
+    
+    // Caso 2: Sin solapamiento (seguro)
+    printf("Caso 2 - Sin solapamiento: %d\n", 
+           hay_solapamiento(buffer + 10, buffer, 5));
+    
+    return 0;
+}
+
+//  --
+// COMO COMPARAR DIRECCIONES DE MEMORIA Y CONTENIDO DE ESAS DIRECCIONES DE MEMORIA
+//  --
+/*
+ptr1 == ptr2: ¿Apuntan al MISMO lugar en memoria?
+*ptr1 == *ptr2: ¿Los VALORES en esas direcciones son iguales?
+memcmp(ptr1, ptr2, n): ¿Los primeros n bytes son iguales?
+*/
+
+ptr - puntero -- guarda la direccion de x
+*ptr - valor del puntero ptr
+ptr[i] - casilla i de ptr
+&ptr - vete a la direccion de ptr
+&ptr[i] vete a la direccion de memoria de ptr al indice i
+
+char *ptr;
+char x; (valor, p.ejemplo '122')
+ptr = &x;  (ptr señala la dirreccion de la emoria de x, por eso el &x)
+
+char *dest;
+ptr = dest;
+
+*ptr es lo mismo que ptr[ind] - ambos hacen referencia a la casilla
+
