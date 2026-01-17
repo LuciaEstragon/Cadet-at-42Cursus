@@ -6,7 +6,7 @@
 /*   By: lestrada <lestrada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/09 19:22:32 by lestrada         ###   ########.fr       */
+/*   Updated: 2026/01/12 17:09:36 by lestrada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,15 @@ GET_NEXT_LINE
 		strlen(save) => no copiar nada en save ya es todo
 
 */
-
-char	*get_next_line(int file)
+/*
+char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*save;
 
-	if (file < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	save = read_file(file, save);
+	save = read_file(fd, save);
 	if (!save)
 		return (NULL);
 	line = make_line(&save);
@@ -54,8 +54,16 @@ char	*ft_free_strjoin(char *save, char *tmp)
 {
 	char	*new;
 
-	if (!save || !tmp)
-		return (NULL);
+	if (!save)
+	{
+		save = (char *)malloc(1);
+		if (!save)
+			return (NULL);
+		save[0] = '\0';
+	}
+	if (!tmp)
+		return (free(save), NULL);
+	
 	new = ft_strjoin(save, tmp);
 	free(save);
 	return (new);
@@ -72,35 +80,39 @@ char	*ft_free_substr(char *str, int start, size_t len)
 	return (new);
 }
 
-char	*read_file(int file, char *save)
+char	*read_file(int fd, char *save)
 {
 	char	*str;
 	int		size_str;
 
+	str = (char *)malloc(BUFFER_SIZE + 1);
+	if (!str)
+		return (free(save), NULL);
+	
 	if (!save)
-		save = (char *)ft_calloc(sizeof(char), 1);
-	str = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!str || !save)
-		return (free(str), free(save), NULL);
+	{
+		save = (char *)malloc(1);
+		if (!save)
+			return (free(str), NULL);
+		save[0] = '\0';
+	}
+	
 	while (!ft_strchr(save, '\n'))
 	{
-		size_str = read(file, str, BUFFER_SIZE);
+		size_str = read(fd, str, BUFFER_SIZE);
 		if (size_str < 0)
 			return (free(str), free(save), NULL);
 		else if (size_str == 0)
 			break;
+		
 		str[size_str] = '\0';
-		//save = ft_strjoin(save, str);
-		save = ft_free_strjoin(save, str); //no esta solucionando mis leaks
-		//free(new_saved);
-		//save = new_saved;
+		save = ft_free_strjoin(save, str);
 		if (!save)
 			return (free(str), NULL);
 	}
 	free(str);
 	return (save);
 }
-//str[size_str] = '\0'; necesario para el tamaño del buffer ajustado, para limpiar el final del buffer cuando haga el join 
 
 char	*make_line(char **save)
 {
@@ -109,16 +121,18 @@ char	*make_line(char **save)
 	char	*temp;
 	int		len;
 
+	temp = NULL;
 	if (!*save || (*save)[0] == '\0')
-		return (NULL);
+		return (free(*save), *save = NULL, NULL);
 	
 	save_aux = ft_strchr(*save, '\n');
 	if (save_aux == NULL)
 	{
 		// Si no hay salto de línea, devolvemos todo save
 		line = ft_strdup(*save);
+		//line = *save;
 		if (!line)
-			return (NULL);
+			return (free(*save), *save = NULL, NULL);
 		free(*save);
 		*save = NULL;
 		return (line);
@@ -126,13 +140,24 @@ char	*make_line(char **save)
 	
 	// Hay salto de línea
 	len = save_aux - *save + 1;
-	line = (char *)ft_calloc(len + 1, sizeof(char));
+	line = (char *)malloc(len + 1);
 	if (!line)
-		return (NULL);
+		return (free(*save), *save = NULL, NULL);
 	ft_strlcpy(line, *save, len + 1);
 	
 	// Actualizar save con lo que queda después del \n
-	temp = ft_strdup(save_aux + 1);
+	if (*(save_aux + 1) != '\0')
+	{
+		temp = ft_strdup(save_aux + 1);
+		//temp = save_aux;
+		//ft_strlcpy(save_aux, temp, ft_strlen(save_aux) + 1);
+		if (!temp)
+		{
+			free(line);
+			return (free(*save), *save = NULL, NULL);
+		}
+	}
+	
 	free(*save);
 	*save = temp;
 	
@@ -140,3 +165,165 @@ char	*make_line(char **save)
 }
 // para qu te coja \n en la linea le pongo un +1 para que termine uno mas tarde
 // para que no te ccooja el \n en la linea le pongo que empiece desde +1
+*/
+
+
+
+
+char	*get_next_line(int fd)
+{
+	char		*line;
+	static char	*save;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (0);
+	save = read_file(fd, save);
+	if (!save)
+		return (NULL);
+	line = make_line(&save);
+	return (line);
+}
+
+char	*ft_free_strjoin(char *save, char *tmp)
+{
+	char	*new;
+
+	if (!save)
+	{
+		save = (char *)malloc(1);
+		if (!save)
+			return (NULL);
+		save[0] = '\0';
+	}
+	if (!tmp)
+		return (free(save), NULL);
+	new = ft_strjoin(save, tmp);
+	free(save);
+	return (new);
+}
+
+// ft_free_substr ELIMINADA
+/*
+char	*read_file(int fd, char *save)
+{
+	char	*str;
+	int		size_str;
+
+	str = (char *)malloc(BUFFER_SIZE + 1);
+	if (!str)
+		return (free(save), NULL);
+	if (!save)
+	{
+		save = (char *)malloc(1);
+		if (!save)
+			return (free(str), NULL);
+		save[0] = '\0';
+	}
+	while (!ft_strchr(save, '\n'))
+	{
+		size_str = read(fd, str, BUFFER_SIZE);
+		if (size_str < 0)
+			return (free(str), free(save), NULL);
+		else if (size_str == 0)
+			break ;
+		str[size_str] = '\0';
+		save = ft_free_strjoin(save, str);
+		if (!save)
+			return (free(str), NULL);
+	}
+	free(str);
+	return (save);
+}
+*/
+char	*read_file(int fd, char *save)
+{
+	char	*str;
+	int		size_str;
+
+	str = (char *)malloc(BUFFER_SIZE + 1);
+	if (!str)
+		return (free(save), NULL);
+	if (!save && !(save = (char *)malloc(1)))
+		return (free(str), NULL);
+	if (!save)
+		save[0] = '\0';
+	while (!ft_strchr(save, '\n'))
+	{
+		size_str = read(fd, str, BUFFER_SIZE);
+		if (size_str < 0)
+			return (free(str), free(save), NULL);
+		if (size_str == 0)
+			break ;
+		str[size_str] = '\0';
+		save = ft_free_strjoin(save, str);
+		if (!save)
+			return (free(str), NULL);
+	}
+	free(str);
+	return (save);
+}
+/*
+char	*make_line(char **save)
+{
+	char	*line;
+	char	*save_aux;
+	char	*temp;
+	int		len;
+
+	temp = NULL;
+	if (!*save || (*save)[0] == '\0')
+		return (free(*save), *save = NULL, NULL);
+	save_aux = ft_strchr(*save, '\n');
+	if (save_aux == NULL)
+	{
+		line = ft_strdup(*save);
+		if (!line)
+			return (free(*save), *save = NULL, NULL);
+		free(*save);
+		*save = NULL;
+		return (line);
+	}
+	len = save_aux - *save + 1;
+	line = (char *)malloc(len + 1);
+	if (!line)
+		return (free(*save), *save = NULL, NULL);
+	ft_strlcpy(line, *save, len + 1);
+	if (*(save_aux + 1) != '\0')
+	{
+		temp = ft_strdup(save_aux + 1);
+		if (!temp)
+		{
+			free(line);
+			return (free(*save), *save = NULL, NULL);
+		}
+	}
+	free(*save);
+	*save = temp;
+	return (line);
+}
+*/
+
+char	*make_line(char **save)
+{
+	char	*line;
+	char	*save_aux;
+	int		len;
+
+	if (!*save || (*save)[0] == '\0')
+		return (free(*save), *save = NULL, NULL);
+	save_aux = ft_strchr(*save, '\n');
+	if (!save_aux)
+	{
+		line = ft_strdup(*save);
+		return (free(*save), *save = NULL, line);
+	}
+	len = save_aux - *save + 1;
+	line = (char *)malloc(len + 1);
+	if (!line)
+		return (free(*save), *save = NULL, NULL);
+	ft_strlcpy(line, *save, len + 1);
+	save_aux = ft_strdup(save_aux + 1);
+	free(*save);
+	*save = save_aux;
+	return (line);
+}
