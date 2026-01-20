@@ -6,7 +6,7 @@
 /*   By: lestrada <lestrada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/17 19:38:27 by lestrada         ###   ########.fr       */
+/*   Updated: 2026/01/20 13:00:58 by lestrada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,13 @@ char	*get_next_line(int file)
 	printf("HOLITA \n \n \n");
 	save = NULL;
 	save = read_file(file, save);
+	printf("save = %s \n", save);
 	line = make_line(&save);
 	return (line);
 }
 
 //mientras no encuentres un salto de linea, sigue leyendo el fichero.
-char	*read_file(int file, char *save)
+/*char	*read_file(int file, char *save)
 {
 	ssize_t bytesLeidos;
 	char *buffer_leido;
@@ -60,8 +61,10 @@ char	*read_file(int file, char *save)
 	bytesLeidos = 0;
 	//new_str = NULL;
 	buffer_leido = NULL;
-	if(save)
-		new_str=save;
+	if(!save){
+		ft_strdup(save);//new_str=save;
+		printf("inicializa new_str con save = %s \n", save);
+	}
 	printf("save 1 = %s/n /n", save);
 	printf("strchr = %s", ft_strchr(new_str, '\n'));
 			printf("HOLA \n \n");
@@ -69,25 +72,51 @@ char	*read_file(int file, char *save)
 		if (!buffer_leido) return NULL;
 	while  (!ft_strchr(new_str, '\n') && bytesLeidos >= 0)
 	{
-		printf("HOLA \n \n");
+		char *msg = ft_strchr(new_str, '\n');
+		printf("LEE ft_strchr(new_str, '\n') = %s \n", msg);
 		bytesLeidos = read(file, buffer_leido, BUFFER_SIZE);
 		buffer_leido[bytesLeidos] = '\0'; //importante!
 
-		printf("buffer_leido = %s", buffer_leido);
-		printf("\n \n");
-
-		new_str = ft_strjoin(new_str, buffer_leido);
-		//new_str = new_str + buffer_leido;
-		printf("new_str = %s", new_str);
-		printf("\n \n");
+		printf("buffer_leido = %s \n", buffer_leido);
+		if(new_str == NULL)
+			new_str = buffer_leido;
+		else
+			new_str = ft_strjoin(new_str, buffer_leido);
+		printf("new_str = %s \n", new_str);
 
 		free(buffer_leido);		
 	}
-	save = new_str;
-	printf("save 2 = %s", save);
-
-		printf("HOLA \n \n");
+	//save = new_str;
+	//printf("save 2 = %s", save);
+	printf("save 2 = %s", new_str);
 	//free(new_str);
+	return (new_str);
+}*/
+
+char	*read_file(int file, char *save)
+{
+	ssize_t bytesLeidos;
+	char *buffer_leido;
+
+	bytesLeidos = 0;
+	buffer_leido = NULL;
+	/*if (!save)
+		save[0] = '\0';*/
+	buffer_leido = malloc(BUFFER_SIZE + 1);
+		if (!buffer_leido) return NULL;
+	while (!ft_strchr(save, '\n') && bytesLeidos >= 0)
+	{
+		bytesLeidos = read(file, buffer_leido, BUFFER_SIZE);
+		buffer_leido[bytesLeidos] = '\0'; //importante!
+		printf("buffer_leido = %s \n", buffer_leido);
+		if(save == NULL)
+			save = buffer_leido;
+		else
+			save = ft_strjoin(save, buffer_leido);
+		printf("new_str = %s \n", save);
+		free(buffer_leido);
+	}
+	printf("save 2 = %s", save);
 	return (save);
 }
 

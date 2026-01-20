@@ -6,7 +6,7 @@
 /*   By: lestrada <lestrada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/20 13:45:17 by lestrada         ###   ########.fr       */
+/*   Updated: 2026/01/20 18:57:47 by lestrada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,6 @@ char	*ft_free_strjoin(char *save, char *tmp)
 	return (new);
 }
 
-char	*ft_free_substr(char *str, int start, size_t len)
-{
-	char	*new;
-
-	if (!str)
-		return (NULL);
-	new = ft_substr(str, start, len);
-	free(str);
-	return (new);
-}
-
 char	*read_file(int file, char *save)
 {
 	char	*str;
@@ -88,12 +77,9 @@ char	*read_file(int file, char *save)
 		if (size_str < 0)
 			return (free(str), free(save), NULL);
 		else if (size_str == 0)
-			break;
+			break ;
 		str[size_str] = '\0';
-		//save = ft_strjoin(save, str);
 		save = ft_free_strjoin(save, str); //no esta solucionando mis leaks
-		//free(new_saved);
-		//save = new_saved;
 		if (!save)
 			return (free(str), NULL);
 	}
@@ -115,8 +101,6 @@ char	*make_line(char **save)
 	if (save_aux == NULL)
 	{
 		line = ft_strdup(*save);
-		if (!line)
-			return (NULL);
 		free(*save);
 		*save = NULL;
 		return (line);
