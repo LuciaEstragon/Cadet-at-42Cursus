@@ -1,0 +1,77 @@
+BORN TO BE ROOT - Configuracion de un servidor con el minimo de servicios. Sin interfaz grafica = X.org o Wayland
+
+REQUISITOS
+- 0. sin interfaz grafica
+- 1. asegurarme de que elijo la ultima version de debian ESTABLE
+- 2. Configuraciones del S.O. : 
+       - SELinux debe estar ejecutándose al inicio y su configuración debe adaptarse a las necesidades del proyecto. 
+       - AppArmor para Debian también debe estar ejecutándose al inicio.
+       - Debe crear al menos dos particiones cifradas con LVM.  (EJEMPLO)
+   # PREGUNTAS HASTA AQUI : poruqe elegiste este SO. Diferencia entre apt y aptitude. Que es AppArmor y SELinux
+- 3. Ejecutar servicio SSH en puerto 4242 de la maquina. No debe ser posible conectarse usando el SSH como root
+   # PREGUNTAS HASTA AQUI : uso de SSH. Configuracion de nueva cuenta para probar el SSH. (?)
+- 4. Firewal UFW - Dejar solo abierto el puerto 4242. Ajustar tamaño del disco de las particiones. Su firewall debe estar activo al iniciar su máquina virtual.
+- 5. Otras Configuraciones
+       - nombre de host de su máquina virtual = lestrada42 - #PREGUNTA: tengo que poder modificarlo desde otra parte
+       - debe implementar una política de contraseñas segura.
+       - debe instalar y configurar sudo siguiendo reglas estrictas
+       - además del usuario root, debe estar presente un usuario con su nombre de usuario como su nombre de usuario. = lestrada
+       - este usuario debe pertenecer a los grupos user42 y sudo. #PREGUNTA: debo poder crear un usuario nuevo
+   HAY NOTAS SOBRE REQUISITOS PASSWORD Y SUDO GROUP
+- 6. Crear un script de bash = monitoring.sh.
+  - Al iniciar el servidor, el script mostrará información (listada a continuación) en todos los terminales cada 10 minutos - banner opcional
+  REQUISITOS SCRIPT
+       - La arquitectura de su sistema operativo y su versión de kernel.
+       - El número de procesadores físicos.
+       - El número de procesadores virtuales.
+       - La RAM disponible actualmente en su servidor y su tasa de utilización como porcentaje.
+       - El almacenamiento disponible actualmente en su servidor y su tasa de utilización como porcentaje.
+       - La tasa de utilización actual de sus procesadores como porcentaje.
+       - La fecha y hora del último reinicio.
+       - Si LVM está activo o no.
+       - El número de conexiones activas.
+       - El número de usuarios que utilizan el servidor.
+       - La dirección IPv4 de su servidor y su dirección MAC (Control de Acceso al Medio). 
+       - El número de comandos ejecutados con el programa sudo.
+   # PREGUNTAS HASTA AQUI : explicar cómo funciona este script. Saber interrumpirlo sin modificarlo. Revise cron.
+
+
+PASOS
+1ª PARTE - Crear maquina virtual desde Virdual Box
+
+2ª PARTE - Instalar el sistema operativo Debian
+Arranque
+  - Lenguaje-pais
+  - nombre de host = nombre de usuario + 42 - Este es el nombre de su dispositivo en la red local
+  - Omita la configuración del nombre de dominio. 
+  - Establezca una contraseña para root. 
+  - Cree un usuario con su nombre de usuario y establezca una contraseña para esta cuenta.
+Particion
+  - Selecciona "Guiado: usar todo el disco y configurar LVM cifrado" y luego "Separar particiones /home, /var y /tmp".  -> ESTO ES PARA EL BONUS!!
+    -> "Guided - use entire disk and set up encrypted LVM" -> "Separate /home, /var and /tmp partitions".
+  - Ajuste el tamaño del grupo de volúmenes en el particionamiento guiado para liberar espacio para un par de volúmenes lógicos adicionales. Vaya a "Configurar el Administrador de Volúmenes Lógicos" y cree dos volúmenes lógicos: srv y var-log. Configúrelos como "Sistema de archivos con registro en diario Ext4" y móntelos en /srv y /var/log, respectivamente.
+  - Evite buscar medios de instalación adicionales. Seleccione el espejo del archivo Debian predeterminado y deje la configuración del proxy en blanco. Elija no participar en la encuesta de uso de paquetes. Asegúrese de instalar el cargador GRUB.
+  - Por último, para la selección de software, seleccione solo "Servidor SSH" y "Utilidades estándar del sistema". Use la barra espaciadora para marcar o desmarcar. Y así, la instalación ha terminado. Reinicie rápidamente su máquina virtual para comenzar a explorar el resto de esta guía de born2beroot.
+
+3ª PARTE - Configuracion de mi maquina
+Configuracion SSH
+
+Configuracion Firewall
+
+Configuracion SUDO y groups
+
+Configuracion Pasword
+
+Configuracion SCRIPT
+
+
+Configuracion Pasword
+requisitos:
+• Su contraseña debe caducar cada 30 días.
+• El tiempo mínimo permitido para modificar una contraseña será de 2 días.
+• El usuario debe recibir un mensaje de advertencia 7 días antes de que caduque su contraseña.
+• Su contraseña debe tener al menos 10 caracteres. Debe contener una letra mayúscula, una minúscula y un número. Además, no debe contener más de 3 caracteres idénticos consecutivos.
+• La contraseña no debe incluir el nombre del usuario.
+• La siguiente regla no se aplica a la contraseña de root: La contraseña debe tener al menos 7 caracteres que no formen parte de la contraseña anterior.
+• Por supuesto, su contraseña de root debe cumplir con esta política.
+
