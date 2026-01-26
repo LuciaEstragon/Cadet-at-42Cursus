@@ -75,3 +75,6 @@ requisitos:
 • La siguiente regla no se aplica a la contraseña de root: La contraseña debe tener al menos 7 caracteres que no formen parte de la contraseña anterior.
 • Por supuesto, su contraseña de root debe cumplir con esta política.
 
+
+
+
