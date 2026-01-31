@@ -51,3 +51,14 @@ int main(void){
 3. si fd = a (sin \nl) 
 
 if (file < 0 || BUFFER_SIZE <= 0 || read(file, 0, 0) < 0)
+
+
+
+BREAK POINTS
+lldb (aqui pones EXEC)
+b main
+r (aqui pones arg)
+gui
+
+para pasar n
+para entrar en funcion s

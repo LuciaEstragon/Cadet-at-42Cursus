@@ -6,11 +6,13 @@
 /*   By: lestrada <lestrada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 13:16:29 by lestrada          #+#    #+#             */
-/*   Updated: 2026/01/26 15:22:13 by lestrada         ###   ########.fr       */
+/*   Updated: 2026/01/27 11:28:43 by lestrada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
+
 /* MAIN ANTIGUO */
 /*
 int	main(void)
@@ -86,17 +88,16 @@ test_gnl(NULL);
 	return (0); // Salir con éxito
 }*/
 
-int main(void){
-	int fd = open("file", O_RDONLY);
-	/*while (1) {
-		char *str = get_next_line(fd);
+int	main(void)
+{
+	//int fd = open("file", O_RDONLY);
+	while (1)
+	{
+		char *str = get_next_line(0);
 		if (str == NULL)
-			break;
+			break ;
 		printf("Acabas de escribir: %s\n", str);
 		free (str);
-	}*/
-	char *str = get_next_line(fd);
-	free (str);
-	str = get_next_line(fd);
-	return 0;
+	}
+	return (0);
 }

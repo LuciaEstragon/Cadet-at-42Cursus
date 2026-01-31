@@ -12,11 +12,13 @@ REQUISITOS
    # PREGUNTAS HASTA AQUI : uso de SSH. Configuracion de nueva cuenta para probar el SSH. (?)
 - 4. Firewal UFW - Dejar solo abierto el puerto 4242. Ajustar tamaño del disco de las particiones. Su firewall debe estar activo al iniciar su máquina virtual.
 - 5. Otras Configuraciones
-       - nombre de host de su máquina virtual = lestrada42 - #PREGUNTA: tengo que poder modificarlo desde otra parte
+       - nombre de host de su máquina virtual = lestrada42 -
+    # PREGUNTA: tengo que poder modificarlo desde otra parte
        - debe implementar una política de contraseñas segura.
        - debe instalar y configurar sudo siguiendo reglas estrictas
        - además del usuario root, debe estar presente un usuario con su nombre de usuario como su nombre de usuario. = lestrada
-       - este usuario debe pertenecer a los grupos user42 y sudo. #PREGUNTA: debo poder crear un usuario nuevo
+       - este usuario debe pertenecer a los grupos user42 y sudo
+    # PREGUNTA: debo poder crear un usuario nuevo
    HAY NOTAS SOBRE REQUISITOS PASSWORD Y SUDO GROUP
 - 6. Crear un script de bash = monitoring.sh.
   - Al iniciar el servidor, el script mostrará información (listada a continuación) en todos los terminales cada 10 minutos - banner opcional
@@ -34,6 +36,9 @@ REQUISITOS
        - La dirección IPv4 de su servidor y su dirección MAC (Control de Acceso al Medio). 
        - El número de comandos ejecutados con el programa sudo.
    # PREGUNTAS HASTA AQUI : explicar cómo funciona este script. Saber interrumpirlo sin modificarlo. Revise cron.
+
+
+
 
 
 PASOS
