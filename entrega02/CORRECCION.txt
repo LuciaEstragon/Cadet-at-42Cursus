@@ -1,0 +1,223 @@
+
+# Preliminaries
+ - presentarte a la correccion
+ - que todas las carpetas esten: signature.txt y README.md
+
+# General instructions
+ - archivo signature se correspone con el hash actual MV: > diff
+ - dupicar maq. vrtual en directorio diferente
+ - verificar que no se estan usando snapshoots
+ - la m.v la enciende el corrector en a prueba, duplicar delante.
+
+# Mandatory part
+
+CONTRASEÑA: luTGdE29je6w
+
+## README.md check
+
+##Project overview
+    The student being evaluated should explain to you simply:
+        How a virtual machine works.
+        Their choice of operating system.
+        The basic differences between Rocky and Debian.
+        The purpose of virtual machines.
+        If the evaluated student chose Rocky: what SELinux and DNF are.
+        If the evaluated student chose Debian: the difference between aptitude and apt, and what APPArmor is. During the defense, a script must display information every 10 minutes. Its operation will be checked in detail later. If the explanations are not clear, the evaluation stops here.
+
+## Simple setup
+
+ - no tiene entorno grafico: # Se verifica porque al bootear en terminal no debe cargar GUI automáticamente
+> systemctl get-default
+    Si responde graphical.target: Tiene entorno gráfico y arrancará con él.
+    Si responde multi-user.target: Arrancará solo en texto (consola).
+ - al conectarte debe pedir una pass. Debe cumplir con norma (comprobacion visual). El usuario NO-DEBE-SER-ROOT
+> whoaim
+    Si responde lestrada esta bien
+ - UFW esta encendido?
+> sudo systemctl status ufw
+    Responde: activo y existente 
+ - SSH esta encendido?
+> sudo systemctl status ssh
+    Responde: activo y corriendo
+ - checkea el s.o.
+> uname --kernel-version  (ó uname -v)
+> uname -a
+> cat /etc/os-release
+    Cualquiera responde version
+
+## User step 1
+ - comprobar que el login estudiante esta y que pertence a los grupos sudo y user42
+    Se comprueba EXISTENCIA visualmente, o con pruebas anteriores. Aunque tambien:
+> id lestrada      #    Respuesta: uid=1000(lestrada) gid=1000(lestrada) grupos=1000(lestrada),24(cdrom),25(floppy),27(sudo),29(audio),30(dip),44(video),46(plugdev),100(users),101(netdev),1001(user42)
+> groups lestrada  #    Respuesta: lestrada : lestrada cdrom floppy sudo audio dip video plugdev users netdev user42
+> cat /etc/group
+# lestrada:x:1000        --> grupo:lestrada, contraseña:x (se guarda encriptada en /etc/gshadow), 1000:GID (Group ID)
+# user42:x:1001:lestrada --> grupo:contraseña:GID: + lestrada - este usuario se unio a ese grupo
+ - mirar pasos de creacion de contraseñas README.
+
+EJERCICIO:
+ - Crear un usuario. Asignar pass. SABER EXPLICAR REGLAS PASS.
+bash```
+# Crear nuevo usuario
+> sudo adduser evaluador42
+# Asignar contraseña que cumpla política
+# Contraseña debe tener: 10+ chars, mayúsculas, minúsculas, números, símbolos
+
+# Verificar configuración
+sudo cat /etc/login.defs | grep -i "pass"
+sudo cat /etc/pam.d/common-password
+
+# El estudiante debe explicar:
+# cat /etc/pam.d/common-password
+# cat /etc/security/pwquality.conf
+```
+
+
+> cat /etc/pam.d/common-password
+# here are the per-package modules (the "Primary" block)
+password	requisite			pam_pwquality.so retry=3 dcredit=-1 difok=7 enforce_for_root lcredit=-1 maxrepeat=3 minlen=10 reject_username ucredit=-1
+password	[success=1 default=ignore]	pam_unix.so obscure use_authtok try_first_pass yescrypt
+# here's the fallback if no module succeeds
+password	requisite			pam_deny.so
+# since the modules above will each just jump around
+password	required			pam_permit.so
+
+minlen=10: Mínimo 10 caracteres
+ucredit=-1: Requiere al menos 1 mayúscula
+lcredit=-1: Requiere al menos 1 minúscula
+dcredit=-1: Requiere al menos 1 número
+ocredit=-1: Requiere al menos 1 símbolo especial
+maxrepeat=3: Máximo 3 caracteres repetidos seguidos
+reject_username: La contraseña no puede contener el nombre de usuario
+difok=7: Mínimo 7 caracteres diferentes de la contraseña anterior
+enforce_for_root: Aplica también para el usuario root
+
+try_first_pass: Intenta usar la contraseña ya ingresada por el usuario
+
+Tdo esto que esta arriba eplicado y definido en la ruta anterior, se explica en esta ruta
+> cat /etc/security/pwquality.conf
+
+
+## User step 2
+
+EJERCICIO 2
+ - Crear un grupo que se llame "evaluating". Dale permisos al usuario para pertenecer a ese grupo.
+
+# Crear grupo
+> sudo groupadd evaluating
+# Añadir usuario al grupo
+> sudo usermod -aG evaluating evaluador_user  # es: usermod -aG grupo usuario
+# Verificar
+> groups evaluador_user
+
+ - Discusión política sobbre la contraseñas del caso anterior
+    - "Ventajas de esta política"
+    - "Desventajas de implementación"
+    - "¿Por qué es importante?"
+
+
+## Hostname and partitions
+ - verificar el hostname
+> hostname   # Respuesta: lestra42 (siemre acabado 42)
+
+EJERCICIO 3
+ - modificar el hostname - restart maquina - ver cambios
+ # Cambiar a tu login
+> sudo hostnamectl set-hostname <tu_login>42
+> sudo reboot
+> hostname
+
+!!NOTA : en mi README tengo apuntado:
+> sudo hostnamectl set-hostname nuevo_nombre42    # modificar el hostname
+> sudo nano /etc/hosts   # modificar el hostname en el archivo (para que no se vaya al hacer reboot)
+
+ - te pone que puedes restaurarlo por tu propio liguin42. Haz lo mismo.
+
+ - mirar las particiones - Compaararlas con el subjet
+> lsblk
+
+ - Explicar como funcioa el LVM - que es - etc
+# Mostrar configuración LVM
+sudo pvdisplay
+sudo vgdisplay
+sudo lvdisplay
+
+
+
+## SUDO
+ - check que el programa sudo esta bien instalada
+> which sudo
+> sudo --version
+
+EJERCICIO 4
+ - el evaluador tiene que estar en el grupo sudo
+    
+    The learner being evaluated should now show assigning your new user to the "sudo" group.
+    The subject imposes strict rules for sudo. The learner being evaluated must first explain the value and operation of sudo using examples of their choice.
+
+In a second step, it must show you the implementation of the rules imposed by the subject.
+
+    Verify that the "/var/log/sudo/" folder exists and has at least one file.
+    Check the contents of the files in this folder. You should see a history of the commands used with sudo.
+    Finally, try to run a command via sudo. See if the file (s) in the "/var/log/sudo/" folder have been updated.
+
+If something does not work as expected or is not clearly explained, the evaluation stops here.
+
+UFW / Firewalld
+
+Remember: Whenever you need help checking something, the student being evaluated
+should be able to help you.
+
+    Check that the "UFW" (or "Firewalld" for rocky) program is properly installed on the virtual machine.
+    Check that it is working properly.
+    The student being evaluated should provide a basic explanation of what UFW (or Firewalld) is and its value.
+    List the active rules in UFW (or Firewalld). A rule must exist for port 4242.
+    Add a new rule to open port 8080. Check that this one has been added by listing the active rules.
+    Finally, delete this new rule with the help of the student being evaluated. If something does not work as expected or is not clearly explained, the evaluation stops here.
+
+SSH
+
+Remember: Whenever you need help checking something, the student being evaluated
+should be able to help you.
+
+    Check that the SSH service is properly installed on the virtual machine.
+    Check that it is working properly.
+    The student being evaluated must be able to explain to you basically what SSH is and the value of using it.
+    Verify that the SSH service only uses port 4242 in the virtual machine.
+    The student being evaluated should help you use SSH in order to log in with the newly created user. To do this, you can use a key or a simple password. It will depend on the student being evaluated. Of course, you have to make sure that you cannot use SSH with the "root" user as stated in the subject. If something does not work as expected or is not clearly explained, the evaluation stops here.
+
+Script monitoring
+
+Remember: Whenever you need help checking something, the learner being evaluated
+should be able to help you.
+
+The learner being evaluated should explain to you simply:
+
+    How their script works by showing you the code.
+    What "cron" is.
+    How the learner being evaluated set up their script so that it runs every 10 minutes from when the server starts.
+
+Once the correct functioning of the script has been verified, the learner being evaluated
+should ensure that this script runs every minute.
+
+    You can run whatever you want to make sure the script runs with dynamic values correctly.
+
+Finally, the learner being evaluated should make the script stop running when the server has started up, but without
+modifying the script itself.
+
+    To check this point, you will have to restart the server one last time.
+    At startup, it will be necessary to check that the script still exists in the same place, that its rights have remained unchanged, and that it has not been modified.
+
+If something does not work as expected or is not clearly explained, the evaluation stops here.
+
+Bonus
+
+Evaluate the bonus part only if the mandatory part has been entirely and perfectly completed, and error management handles unexpected or improper usage. In case all the mandatory points were not passed during the defense, bonus points must be totally ignored.
+Bonus
+
+Check, with the help of the subject and the student being evaluated, the bonus
+points authorized for this project:
+
+    Setting up partitions is worth 2 points.
+    Setting up WordPress, only with the services required by the subject, is worth 2 points.
+    The free choice service is worth 1 point. Verify and test the proper functioning and implementation of each extra service. For the free choice service, the student being evaluated must provide a simple explanation of how it works and why they think it is useful. Please note that NGINX and Apache2 are prohibited.
