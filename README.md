@@ -17,7 +17,9 @@ Estos proyectos son puramente académicos. Pertenecen al currículo del curso 42
 
  - Advent of Code 2025 -> Calendario de adviendo Navidad, con retos de proyectos diarios en C.  https://adventofcode.com/
  - Preparar el examen Rank 02:
+
       https://42-cursus.gitbook.io/guide/exams/exam-rank-02/level-1
+   
       https://github.com/terminal-42s/42_examshell
 
 
