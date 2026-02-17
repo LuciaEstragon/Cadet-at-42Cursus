@@ -8,22 +8,18 @@ Estos proyectos son puramente académicos. Pertenecen al currículo del curso 42
 
 - GNL - GetNextLine -> Funcion muy util en la lectura de ficheros.
 
-- BORN_TO_BE_ROOT ->
+- BORN_TO_BE_ROOT -> Instalacion y configuracion avanzada de una maquina virtual Debian
   
-- PUSH_SWAP ->
+- PUSH_SWAP -> Ordena valores de una lista, usando un algoritmo.
 
 
 ## ✨ Otros proyectos 🐾📚
 
  - Advent of Code 2025 -> Calendario de adviendo Navidad, con retos de proyectos diarios en C.  https://adventofcode.com/
+ 
  - Preparar el examen Rank 02:
-
       https://42-cursus.gitbook.io/guide/exams/exam-rank-02/level-1
-   
       https://github.com/terminal-42s/42_examshell
-
-
-
 
 ## ✍️ Author 💭
 
@@ -41,11 +37,11 @@ These projects are purely academic. They belong to the curriculum of the 42code 
 
 - PRINTF ->  The project replicate the functions from the <stdio.h> with de same name.
 
-- GNL - GetNextLine ->
+- GNL - GetNextLine -> Very useful function for reading files.
 
-- BORN_TO_BE_ROOT ->
+- BORN_TO_BE_ROOT -> Installation and advanced configuration of a Debian virtual machine.
 
-- PUSH_SWAP ->
+- PUSH_SWAP -> Sorts values ​​in a list using an algorithm.
 
 
 ## ✨ Other Projects 🐾📚
@@ -53,6 +49,8 @@ These projects are purely academic. They belong to the curriculum of the 42code 
 - Advent of Code 2025 -> Christmas Advent Calendar with daily C project challenges. https://adventofcode.com/
 
 - Preparing for the Rank 02 exam
+      https://42-cursus.gitbook.io/guide/exams/exam-rank-02/level-1
+      https://github.com/terminal-42s/42_examshell
 
 ## ✍️ Author 💭
 
