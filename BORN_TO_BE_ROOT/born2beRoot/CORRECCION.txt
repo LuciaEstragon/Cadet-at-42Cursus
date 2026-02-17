@@ -1,0 +1,327 @@
+
+# Preliminaries
+ - presentarte a la correccion
+ - que todas las carpetas esten: signature.txt y README.md
+
+# General instructions
+ - archivo signature se correspone con el hash actual MV: > diff
+ - dupicar maq. vrtual en directorio diferente
+ - verificar que no se estan usando snapshoots
+ - la m.v la enciende el corrector en a prueba, duplicar delante.
+
+# Mandatory part
+
+CONTRASEÑA: luTGdE29je6w
+
+## README.md check
+
+##Project overview
+    The student being evaluated should explain to you simply:
+        How a virtual machine works.
+        Their choice of operating system.
+        The basic differences between Rocky and Debian.
+        The purpose of virtual machines.
+        If the evaluated student chose Rocky: what SELinux and DNF are.
+        If the evaluated student chose Debian: the difference between aptitude and apt, and what APPArmor is. During the defense, a script must display information every 10 minutes. Its operation will be checked in detail later. If the explanations are not clear, the evaluation stops here.
+
+## Simple setup
+
+ - no tiene entorno grafico: # Se verifica porque al bootear en terminal no debe cargar GUI automáticamente
+> systemctl get-default
+    Si responde graphical.target: Tiene entorno gráfico y arrancará con él.
+    Si responde multi-user.target: Arrancará solo en texto (consola).
+ - al conectarte debe pedir una pass. Debe cumplir con norma (comprobacion visual). El usuario NO-DEBE-SER-ROOT
+> whoaim
+    Si responde lestrada esta bien
+ - UFW esta encendido?
+> sudo systemctl status ufw
+    Responde: activo y existente 
+ - SSH esta encendido?
+> sudo systemctl status ssh
+    Responde: activo y corriendo
+ - checkea el s.o.
+> uname --kernel-version  (ó uname -v)
+> uname -a
+> cat /etc/os-release
+    Cualquiera responde version
+
+## User step 1
+ - comprobar que el login estudiante esta y que pertence a los grupos sudo y user42
+    Se comprueba EXISTENCIA visualmente, o con pruebas anteriores. Aunque tambien:
+> id lestrada      #    Respuesta: uid=1000(lestrada) gid=1000(lestrada) grupos=1000(lestrada),24(cdrom),25(floppy),27(sudo),29(audio),30(dip),44(video),46(plugdev),100(users),101(netdev),1001(user42)
+> groups lestrada  #    Respuesta: lestrada : lestrada cdrom floppy sudo audio dip video plugdev users netdev user42
+> cat /etc/group
+# lestrada:x:1000        --> grupo:lestrada, contraseña:x (se guarda encriptada en /etc/gshadow), 1000:GID (Group ID)
+# user42:x:1001:lestrada --> grupo:contraseña:GID: + lestrada - este usuario se unio a ese grupo
+ - mirar pasos de creacion de contraseñas README.
+
+EJERCICIO:
+ - Crear un usuario. Asignar pass. SABER EXPLICAR REGLAS PASS.
+bash```
+# Crear nuevo usuario
+> sudo adduser evaluador42
+# Asignar contraseña que cumpla política
+# Contraseña debe tener: 10+ chars, mayúsculas, minúsculas, números, símbolos
+
+# Verificar configuración
+sudo cat /etc/login.defs | grep -i "pass"
+sudo cat /etc/pam.d/common-password
+
+nano /etc/login.defs 
+
+# El estudiante debe explicar:
+# cat /etc/pam.d/common-password
+# cat /etc/security/pwquality.conf
+```
+
+
+> cat /etc/pam.d/common-password
+# here are the per-package modules (the "Primary" block)
+password	requisite			pam_pwquality.so retry=3 dcredit=-1 difok=7 enforce_for_root lcredit=-1 maxrepeat=3 minlen=10 reject_username ucredit=-1
+password	[success=1 default=ignore]	pam_unix.so obscure use_authtok try_first_pass yescrypt
+# here's the fallback if no module succeeds
+password	requisite			pam_deny.so
+# since the modules above will each just jump around
+password	required			pam_permit.so
+
+minlen=10: Mínimo 10 caracteres
+ucredit=-1: Requiere al menos 1 mayúscula
+lcredit=-1: Requiere al menos 1 minúscula
+dcredit=-1: Requiere al menos 1 número
+ocredit=-1: Requiere al menos 1 símbolo especial
+maxrepeat=3: Máximo 3 caracteres repetidos seguidos
+reject_username: La contraseña no puede contener el nombre de usuario
+difok=7: Mínimo 7 caracteres diferentes de la contraseña anterior
+enforce_for_root: Aplica también para el usuario root
+
+try_first_pass: Intenta usar la contraseña ya ingresada por el usuario
+
+Tdo esto que esta arriba eplicado y definido en la ruta anterior, se explica en esta ruta
+> cat /etc/security/pwquality.conf
+
+
+## User step 2
+
+EJERCICIO 2
+ - Crear un grupo que se llame "evaluating". Dale permisos al usuario para pertenecer a ese grupo.
+
+# Crear grupo
+> sudo groupadd evaluating
+# Añadir usuario al grupo
+> sudo usermod -aG evaluating evaluador_user  # es: usermod -aG grupo usuario
+# Verificar
+> groups evaluador_user
+
+ - Discusión política sobbre la contraseñas del caso anterior
+    - "Ventajas de esta política"
+    - "Desventajas de implementación"
+    - "¿Por qué es importante?"
+
+
+## Hostname and partitions
+ - verificar el hostname
+> hostname   # Respuesta: lestra42 (siemre acabado 42)
+
+EJERCICIO 3
+ - modificar el hostname - restart maquina - ver cambios
+ # Cambiar a tu login
+> sudo hostnamectl set-hostname <tu_login>42
+> sudo reboot
+> hostname
+
+!!NOTA : en mi README tengo apuntado:
+> sudo hostnamectl set-hostname nuevo_nombre42    # modificar el hostname
+> sudo nano /etc/hosts   # modificar el hostname en el archivo (para que no se vaya al hacer reboot)
+
+ - te pone que puedes restaurarlo por tu propio liguin42. Haz lo mismo.
+
+ - mirar las particiones - Compaararlas con el subjet
+> lsblk
+
+ - Explicar como funcioa el LVM - que es - etc
+# Mostrar configuración LVM
+sudo pvdisplay
+sudo vgdisplay
+sudo lvdisplay
+
+
+
+## SUDO
+ - check que el programa sudo esta bien instalada
+> which sudo
+> sudo --version
+
+EJERCICIO 4
+ - el evaluador tiene que estar en el grupo sudo
+ # El estudiante debe hacer:
+sudo usermod -aG sudo evaluador42
+# Verificar
+groups evaluador42
+ - reglas de sudo# Verificar configuración
+sudo visudo -c
+sudo cat /etc/sudoers.d/<config_estudiante>
+
+ - logs de sudo - REGLAS de sudo
+ # Verificar directorio logs
+sudo ls -la /var/log/sudo/
+# Ver contenido
+sudo cat /var/log/sudo/sudo.log
+sudo tail -f /var/log/sudo/sudo.log  ## con esto solo veo los ultimos logs de sudo, no todo el archivo
+
+
+
+## UFW / Firewalld
+ - comprobacion del UFW, YA LO HICIMOS 
+ sudo ufw version
+ sudo ufw status
+ 
+EXPLICAR - que es UFW? y porque es importante?
+    UFW (Uncomplicated Firewall) es una herramienta de configuración de firewall para Linux
+    permite a los usuarios y administradores asegurar rápidamente un servidor al gestionar qué tráfico E/S para evitar accesos no autorizados o ataques cibernético
+    a menos que tu establezcas puertos y vias de comunicacion E/S, nada puede comunicarse. 
+    REGLAS UFW:
+    sudo ufw enable # lo activas
+    sudo ufw limit ssh
+    sudo ufw deny from 192.168.1.50 # prohibes acceso a un IP por uno de los puertos
+    # o puedo prohibir todo y solo dejar un puerto solo para un IP
+    sudo ufw default deny incoming 
+    sudo ufw allow from 203.0.113.5 to any port 22
+
+
+- verificar regla para el 4242
+sudo ufw status | grep 4242
+
+sudo ufw status numbered
+
+To                         Action      From
+--                         ------      ----
+4242                       ALLOW       Anywhere                  
+4242 (v6)                  ALLOW       Anywhere (v6)  
+
+Cuando ves 4242 ALLOW y justo debajo 4242 (v6) ALLOW, significa lo siguiente:
+
+    4242 (sin etiqueta): La regla se aplica a IPv4. Es la que te permite entrar desde la mayoría de redes actuales.
+    4242 (v6): La regla se aplica a IPv6. Es necesaria para conexiones que usen este protocolo.
+
+
+EJERCICIO
+- Añade una nueva regla para puerto 8080 y luego borrala
+sudo ufw allow 8080 # Añadir
+sudo ufw status | grep 8080 # verificar
+sudo ufw delete allow 8080 # borrar
+
+sudo ufw status numbered
+
+
+## SSH
+ - check ssh - YA ESTABa HECHO
+ which ssh
+ssh -V
+sudo systemctl status ssh
+ - chequea la configuracion del puerto 4242
+sudo cat /etc/ssh/sshd_config | grep -i port
+# Debe decir: Port 4242
+ -  checkear no root login
+ sudo cat /etc/ssh/sshd_config | grep -i "permitrootlogin"
+# Debe decir: PermitRootLogin no
+
+
+EJERCICIO
+ - desde hoat entrar a mi maquina virtual por el puerto 4242
+ > ip a ## conseguir la direccion IP de mi maq. virtual
+   Responde: IP= 10.0.2.15  > esta enp0s3: Tu tarjeta de red (Ethernet)
+# desde HOST voy a hacer lo siguiente
+ > ssh usuario@ip_maquina -p 4242
+ > ssh lestrada@10.0.2.15 -p 4242
+
+ !! NOTA: si mi config de SSH es NAT, no voy a poder. Si es Bridge si!
+
+ NAT:
+ [INTERNET] ←→ [TU PC (Host)] ← NAT → [TU VM (10.0.2.15)]
+                                  ↕
+                             VirtualBox NAT Engine
+
+ BRIDGE:
+ [INTERNET] ←→ [Router] ←→ [TU PC (192.168.1.50)]
+                               ↕
+                     [TU VM (192.168.1.51)] ← Misma red! 
+
+
+NAT
+ssh lestrada@localhost -p 2222  # Esto esta bien
+ssh lestrada@10.0.2.15 -p 4242  # Esto no funciona
+
+Cuando usas localhost -p 2222, le estás hablando a tu propio PC.
+VirtualBox escucha en ese puerto 2222 y redirige los datos hacia la IP 10.0.2.15 al puerto 4242.
+Tu PC-HOST no tiene una ruta física para llegar directamente a esa IP. Para tu ordenador, la IP 10.0.2.15 es invisible.
+
+BRIDGE
+ssh lestrada@localhost -p 2222  # Esto no funciona
+ssh lestrada@10.0.2.15 -p 4242  # Esto no funciona
+
+La IP de la VM ya no sería 10.0.2.15, sino una similar a la de tu host (ejemplo: 10.11.200.5). 
+NOTA: como tenemos ordenadores que cambian de IP esto puede que no sea fijo.
+En este caso, el comando ssh lestrada@10.11.200.5 -p 4242 sí funcionaría directamente desde tu host.
+Adiós al puerto 2222: Ya no necesitas el mapeo de VirtualBox. El puerto 2222 dejaría de tener sentido porque ya puedes atacar directamente al puerto real de la VM.
+
+
+
+comando para saber configuracion NAT o Bridge
+ip route | grep default
+
+ lestrada@lestrada42:~$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:37:8d:fc brd ff:ff:ff:ff:ff:ff
+    altname enx080027378dfc
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
+       valid_lft 84788sec preferred_lft 73988sec
+    inet6 fe80::a627:6917:7fce:48bd/64 scope link 
+       valid_lft forever preferred_lft forever
+
+
+NOTA LARGA: 
+NAT es mas facil para pruebas, porque pongo " ssh lestrada@localhost -p 2222 " y estoy desde mi propia terminal manejando todo y con colores.
+Si quiero usar BRIDGET, me tengo que meter en la terminal y buscar la IP de mi maquina virtual: brd 10.11.255.255
+> ip a  # desde local hay muchas IP, desde la maq te sale solo
+    2: enp4s0f0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+        link/ether 38:f9:d3:12:4c:d7 brd ff:ff:ff:ff:ff:ff
+        inet 10.11.17.6/16 metric 100 brd 10.11.255.255 scope global enp4s0f0
+           valid_lft forever preferred_lft forever
+        inet6 fe80::3af9:d3ff:fe12:4cd7/64 scope link 
+           valid_lft forever preferred_lft forever
+
+Los dos casos: NAT y BRIDGED deben cumplir que la maq solo puede comunicarse con en puerto 4242. !!!!SOLO!!!
+
+
+
+## Script monitoring
+# Preguntar:
+# - "¿Cómo funciona el script?"
+cat /etc/cron.d/monitoring.sh
+# - "¿Qué es cron?"
+Cron es un administrador de procesos en sistemas Unix/Linux que funciona como un programador de tareas automático.
+# - "¿Cómo configuraste la ejecución cada 10 minutos?"
+crontab -u root -e
+
+
+EJERCICIO
+ - hacer que corra cada 1 minuto (valores DINAMICOS) --> Puede ejecutar lo que desee para asegurarse de que el script se ejecute correctamente con valores dinámicos
+ - detener la ejecución del script al iniciar el servidor
+ - desbes reiniciar y comprobar que la configuracion sigue ahi.
+
+> crontab -u root -e # mecesitas estar en root, por esu -u root; o no funciona
+# */10 * * * * bash /etc/cron.d/monitoring.sh | wall
+# NOTA: el  wall sirve para que se escriba sobre todos los terminales abiertos
+
+> sudo systemctl start cron 
+> sudo systemctl stop cron 
+> sudo systemctl status cron 
+
+> sudo crontab -l # para ver el contenido de cron
+> cat /etc/crontab

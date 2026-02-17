@@ -6,14 +6,14 @@ Estos proyectos son puramente académicos. Pertenecen al currículo del curso 42
 
 - PRINTF -> Proyectos que replica las funciones de <stdio.h> con el mismo nombre.
 
-- GNL - GetNextLine ->
+- GNL - GetNextLine -> Funcion muy util en la lectura de ficheros.
 
 - BORN_TO_BE_ROOT ->
   
 - PUSH_SWAP ->
 
 
-## ✨ Otros proyectos 🐾
+## ✨ Otros proyectos 🐾📚
 
  - Advent of Code 2025 -> Calendario de adviendo Navidad, con retos de proyectos diarios en C.  https://adventofcode.com/
  - Preparar el examen Rank 02:
@@ -48,7 +48,7 @@ These projects are purely academic. They belong to the curriculum of the 42code 
 - PUSH_SWAP ->
 
 
-## ✨ Other Projects 🐾
+## ✨ Other Projects 🐾📚
 
 - Advent of Code 2025 -> Christmas Advent Calendar with daily C project challenges. https://adventofcode.com/
 
