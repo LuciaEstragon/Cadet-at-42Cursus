@@ -1,0 +1,69 @@
+ALGORITMOS DE ORDENACION DE DOS PILAS
+
+El objetivo del proyecto es ordenar una lista de números enteros aleatorios con una limitación muy particular: solo puedes usar dos pilas (llamadas STACK_A y STACK_B) y un conjunto muy limitado de instrucciones para mover los números entre ellas (como push, swap, rotate).
+
+
+1. Algoritmo Turco (llamado con humor Turkish Algorithm por su creador, A. Yigit Ogun) -- menor cantidad de movimientos
+Comienza con todos los números desordenados en STACK_A y la STACK_B vacía.
+Mover a STACK_B de manera que queden en orden descendente. Para decidir dónde colocar cada número, calcula el costo (número de operaciones) de insertarlo en la posición correcta dentro de STACK_B. Una vez que todos los números están en STACK_B en orden descendente, el algoritmo simplemente los regresa uno por uno a STACK_A, para que queden ordenados de forma ascendente.
+
+.Optimización: transferir todos menos 3: si en algún momento una pila se queda con solo 3 números, ordenarlos es trivial y requiere muy pocos movimientos
+·Rotaciones inteligentes: Para minimizar aún más los pasos, el algoritmo analiza y ejecuta rotaciones de forma simultánea en ambas pilas cuando es beneficioso
+·Calcular costos: Para cada elemento en B, calcula el "costo" en movimientos de llevarlo de vuelta a su posición correcta en A.
+·Mover el más barato: Ejecuta los movimientos del elemento con el costo más bajo, pasándolo de B a A.
+·Toque final: Por último, se asegura de que el número más pequeño quede en la cima de STACK_A, lo que confirma que la pila está completamente ordenada
+
+2. Radix Sort (o "Algoritmo Binario")
+No compara números entre sí, sino que trabaja con sus representaciones binarias (bits)
+
+·Preparación: Se asigna un índice a cada número para simplificar su manejo 
+·Ordenar por bit: Se procesa la lista bit por bit, empezando por el menos significativo.
+·Distribuir: Dependiendo del valor del bit actual (0 o 1), los números se mueven entre las pilas A y B usando las operaciones push y rotate
+·Repetir: Se repite el proceso para el siguiente bit, hasta haber procesado todos.
+
+3. Algoritmo Greedy con LIS (Longest Increasing Subsequence)
+Este es un enfoque "codicioso" que busca optimizar cada movimiento. Una versión interesante usa la Subsecuencia Creciente Más Larga (LIS) para maximizar el orden inicial
+ ·Identificar ordenados: En lugar de mover todo a B, el algoritmo identifica la subsecuencia de números que ya están en orden creciente dentro de la pila A (la LIS). Estos se dejan quietos.
+ Mover el resto: Los números que no pertenecen a la LIS se pasan a la pila B.
+Insertar con costo: Al igual que el algoritmo Turco, se calcula el costo de traer de vuelta cada elemento de B a A y se ejecuta el movimiento más barato. Al preservar la LIS en A, se reduce el trabajo total.
+
+4. Método de Inserción con Pila Auxiliar:
+Es la forma más sencilla y conceptual de ordenar con dos pilas, útil para entender la lógica de inserción, aunque no es la más eficiente para el proyecto Push_swap. Se usa típicamente para mantener una pila siempre ordenada mientras se insertan nuevos elementos
+· Comparar y apartar: Para insertar un nuevo número en la pila ordenada (A), se comparacon los elementos de su cima. Todos los elementos mayores que el nuevo número se sacan de A y se apilan temporalmente en la pila auxiliar (B).
+· Insertar: Una vez que la cima de A ya es menor que el nuevo número, se coloca (push) el nuevo número en A.
+· Recuperar: Finalmente, todos los elementos que se habían apartado en B se regresan a A, dejando la pila nuevamente ordenada.
+
+
+
+
+
+
+
+[1] [6] [3] [4] [7] [2] [5]    -->   [1] [2] [3] [4] [5] [6] [7]
+[12] [60] [10] [1] [6] [62] [5]    -->   [1] [5] [6] [10] [12] [60] [62]
+					-->  [1] [2] [3] [10] [12] [80] [180] 
+					-->   [1] [2] [156] [161] [175] [178] [180]
+
+1. QUICK SORT
+pivote: [10]  (A) --> suma(NUM)/TOT -> primer_caso = 4 (perfecto)  -> segundo_caso = 22 (malo) -> tercer_caso = 41.14 -> tercer_caso = 121
+		(B) --> (MAX-MIN)/(TOT) -> primer_caso = 1 (perfecto)  -> segundo_caso = 10,16 -> tercer_caso = 29,83 -> tercer_caso = 29,8 
+		(primer caso== 4-1(-1)=4  //  segundo caso== 22-10(-1)=11 // tercer caso== 41-29(-1)=11  // tercer caso== 121+29=150
+		
+		--> puedo coger el eleccion A y preguntar, cuantos son menores y cuantos son mayores y desplazar el dato
+
+2. ORDENAR CALCULANDO COSTES
+STACK_A -> se quedan los pequeños
+STACK_B -> se van los grandes
+ - Mientras los paso de una fila a otra les pregunto si son menor o mayores que el siguiente-anterior de la otra pila y de esta pila
+ 
+ STACK_A -> [a1][a2]--[an-1][an]
+ STACK_B -> [b1][b2]--[bn-1][bn] 
+ 
+ si a1 es pequeño => pila A
+  si a1 es grande => pila B -> que pasa si b1 o bn son el adyacente a a1
+ si a1 es pequeño => pila A
+   COSTE 1 = rotar a1 y a2 - que - rotar a1 y an
+   ¿pregunto con cual esta mas cerca
+ COSTE 0 pila B, coste 1 pasar pila A
+ 
+

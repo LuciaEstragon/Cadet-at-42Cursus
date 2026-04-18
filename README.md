@@ -10,12 +10,13 @@ Estos proyectos son puramente académicos. Pertenecen al currículo del curso 42
 
 - BORN_TO_BE_ROOT -> Instalacion y configuracion avanzada de una maquina virtual Debian
   
-- PUSH_SWAP -> Ordena valores de una lista, usando un algoritmo.
+- PUSH_SWAP -> Ordena valores de una lista, usando un algoritmo de ordenacion de dos pilas.
 
 
 ## ✨ Otros proyectos 🐾📚
 
- - Advent of Code 2025 -> Calendario de adviendo Navidad, con retos de proyectos diarios en C.  https://adventofcode.com/
+ - Advent of Code 2025 -> Calendario de adviendo Navidad, con retos de proyectos diarios en C.  
+      https://adventofcode.com/
  
  - Preparar el examen Rank 02:
       https://42-cursus.gitbook.io/guide/exams/exam-rank-02/level-1
@@ -46,7 +47,8 @@ These projects are purely academic. They belong to the curriculum of the 42code 
 
 ## ✨ Other Projects 🐾📚
 
-- Advent of Code 2025 -> Christmas Advent Calendar with daily C project challenges. https://adventofcode.com/
+- Advent of Code 2025 -> Christmas Advent Calendar with daily C project challenges. 
+      https://adventofcode.com/
 
 - Preparing for the Rank 02 exam
       https://42-cursus.gitbook.io/guide/exams/exam-rank-02/level-1

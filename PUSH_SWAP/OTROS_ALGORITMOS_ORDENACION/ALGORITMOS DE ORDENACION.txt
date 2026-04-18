@@ -1,0 +1,47 @@
+ALGORITMOS DE ORDENACION
+
+1. METODO BURBUJA (sencillo, poco eficiente listas grandes)
+Recorre la lista repetidamente, comparando elementos adyacentes e intercambiándolos si están en el orden incorrecto.Se repite hasta que no haya intercambios.
+    Lista inicial: [5, 1, 4, 8, 2]
+    Primera pasada:
+        Compara 5 y 1 → intercambia → [1, 5, 4, 8, 2]
+        Compara 5 y 4 → intercambia → [1, 4, 5, 8, 2]
+        Compara 5 y 8 → no cambia
+        Compara 8 y 2 → intercambia → [1, 4, 5, 2, 8]
+   Al final de la pasada, el 8 ya está en su lugar. Pero el 2 tardara en bajar. Se repite hasta que no haya intercambios.
+
+2. QUICKSORT - Funcion sort o Timsort (muy rapido en la practica)
+Algoritmo de divide y vencerás.Elige un elemento como pivote y ordena de modo que todos los elementos menores que el pivote queden a su izquierda y los mayores a su derecha (partición).Aplica recursivamente el mismo proceso a las sublistas izquierda y derecha.
+    Lista inicial: [8, 3, 1, 7, 0, 4] con pivote = 4
+    Primera pasada: [3, 1, 0, 4, 8, 7] -> dejas menores izq: [3, 1, 0], y mayores der: [8, 7]
+    Luego se ordenan las listas [3, 1, 0] y [8, 7] recursivamente.
+    Sublista inicial: [3, 1, 0] -> pivote 1.
+    Primera pasada: [0, 1, 3]
+    Etc..
+
+3. RADIX SORT (ordenamiento por dígitos)
+Algoritmo no comparativo, ideal para números enteros o cadenas de longitud fija. Ordena procesando los dígitos individualmente.
+Se basa en los dígitos (o caracteres) de los números, desde el menos significativo (LSD) o el más significativo (MSD).
+        Lista inicial: [170, 45, 75, 90, 802, 24, 2, 66]
+        Primero ordena por unidad: [170, 90, 802, 2, 24, 45, 75, 66]
+        Luego por decena: [802, 2, 24, 45, 66, 170, 75, 90]
+        Finalmente por centena: [2, 24, 45, 66, 75, 90, 170, 802]
+
+4. BUCKET SORT (ordenamiento por cubos)
+Distribuye los elementos en un número fijo de cubos (buckets) según su valor (por ejemplo, usando una función de mapeo).
+Cada cubo se ordena individualmente (con otro algoritmo, como inserción o quicksort). Se concatenan los cubos en orden.
+    
+5. Selection Sort (Ordenamiento por Selección) - (muy intuitivo, ineficiente listas grandes)
+Funciona dividiendo la lista en dos partes: una parte ordenada y otra desordenada. En cada paso, busca el elemento más pequeño de la parte desordenada y lo intercambia con el primer elemento de esa parte, moviendo así la frontera de la zona ordenada un lugar hacia la derecha. Es simple pero ineficiente para listas grandes.
+
+6. Insertion Sort (Ordenamiento por Inserción) - (eficiente listas pequeñas o mas ordenadas)
+Construye la lista ordenada final tomando un elemento de la lista desordenada e insertándolo en la posición correcta dentro de la lista ordenada, desplazando los demás elementos si es necesario. Es muy eficiente para listas pequeñas o parcialmente ordenadas.
+
+7. Merge Sort (Ordenamiento por Mezcla)
+Algoritmo clásico de "divide y vencerás". Primero, divide la lista repetidamente por la mitad hasta obtener sublistas de un solo elemento (que por definición están ordenadas). Luego, fusiona (merge) esas sublistas de manera ordenada para crear sublistas más grandes y ordenadas, hasta reconstruir la lista completa. Su gran ventaja es que siempre tiene una complejidad de O(n log n), incluso en el peor de los casos.
+
+8. Heap Sort (Ordenamiento por Montículos)
+Algoritmo que convierte primero la lista en una estructura de datos llamada "montículo" (heap), que es como un árbol binario donde el elemento más grande (en un montículo de máximos) está siempre en la raíz. Luego, intercambia repetidamente la raíz (el máximo) con el último elemento de la lista, reduce el tamaño del montículo y lo reordena para que la nueva raíz sea el siguiente máximo. Así, va colocando los elementos más grandes al final de la lista.
+
+9. Counting Sort (Ordenamiento por Conteo)
+A diferencia de los anteriores, este no compara elementos. En su lugar, asume que los números a ordenar están dentro de un rango conocido y limitado. Crea un array de conteo para almacenar, para cada posible valor del rango, cuántas veces aparece en la lista. Luego, modifica este array de conteo para que cada posición indique la posición final de ese elemento en la lista ordenada, lo que le permite colocar cada elemento directamente en su lugar correcto. Es muy rápido (O(n+k), donde k es el tamaño del rango) pero consume mucha memoria si el rango es grande.

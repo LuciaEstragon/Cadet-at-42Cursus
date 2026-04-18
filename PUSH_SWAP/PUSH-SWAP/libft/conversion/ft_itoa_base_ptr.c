@@ -1,0 +1,53 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa_base_ptr.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lestrada <lestrada@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/09 19:06:33 by lestrada          #+#    #+#             */
+/*   Updated: 2026/04/08 21:43:38 by lestrada         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <libft.h>
+
+static int	digit_count_ptr(unsigned long long nb, int base)
+{
+	int	count;
+
+	count = 0;
+	if (nb == 0)
+		return (1);
+	while (nb != 0)
+	{
+		count++;
+		nb = nb / base;
+	}
+	return (count);
+}
+
+char	*ft_itoa_base_ptr(unsigned long long nb, char *base_set)
+{
+	char	*str;
+	int		len_nmb;
+	int		base;
+
+	base = 16;
+	len_nmb = digit_count_ptr(nb, base);
+	str = (char *)calloc((len_nmb + 1), sizeof(char));
+	if (!str)
+		return (NULL);
+	if (nb == 0)
+	{
+		str[0] = base_set[0];
+		return (str);
+	}
+	while (nb != 0)
+	{
+		len_nmb--;
+		str[len_nmb] = base_set[nb % base];
+		nb = nb / base;
+	}
+	return (str);
+}

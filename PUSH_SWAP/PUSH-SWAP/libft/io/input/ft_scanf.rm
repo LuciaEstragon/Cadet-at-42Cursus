@@ -1,0 +1,32 @@
+PARSEO - ft_SCANF()
+
+Programa scanf, que sea una mezcla entre printf y gnl.
+
+
+
+#include <stdio.h>
+
+int main() {
+    // 1. El dato "en bruto" (una cadena de texto)
+    char entrada[] = "Sensor_Temp:24.5";
+
+    // Variables donde guardaremos los datos parseados
+    char nombre_sensor[20];
+    float temperatura;
+
+    // 2. EL PROCESO DE PARSEO
+    // sscanf busca un formato específico: "%[^:]" (texto hasta los dos puntos) 
+    // luego ":" (el separador) y "%f" (un número decimal)
+    int leidos = sscanf(entrada, "%[^:]:%f", nombre_sensor, &temperatura);
+
+    // 3. Resultado del parseo
+    if (leidos == 2) {
+        printf("Parseo exitoso:\n");
+        printf("Nombre del sensor: %s\n", nombre_sensor);
+        printf("Valor extraido: %.2f grados\n", temperatura);
+    } else {
+        printf("Error al parsear la cadena.\n");
+    }
+
+    return 0;
+}
