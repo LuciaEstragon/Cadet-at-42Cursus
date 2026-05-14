@@ -1,0 +1,83 @@
+Capítulo III – Instrucciones Comunes
+III.1 Reglas Generales
+Todos los programas deben escribirse en Python 3.10 o posterior.
+
+Tu código debe cumplir con los estándares del linter flake8.
+
+Todas las funciones y métodos deben incluir anotaciones de tipo. Verifica esto con mypy.
+
+Tus funciones deben manejar las excepciones con elegancia para evitar fallos.
+
+Entrega tu trabajo en el repositorio Git asignado.
+
+Solo el contenido en este repositorio será evaluado.
+
+Nota para estudiantes avanzados: el uso de la sentencia with se introducirá en el ejercicio 3. No debes usarla antes de entonces.
+
+Los siguientes tipos y colecciones estándar están permitidos, junto con todos sus métodos y constructores asociados: str, int, float, list, dict, set, tuple.
+
+III.2 Especificaciones de Salida
+Cada ejercicio proporciona ejemplos de terminal que muestran el formato de salida sugerido. Si bien la estructura central debe mantenerse, puedes personalizar los mensajes para reflejar tu comprensión de las operaciones de archivos, siempre que se preserve la información esencial.
+
+Capítulo IV – Ejercicio 0: Recuperación de Texto Antiguo
+Carpeta	Archivos a entregar	Autorizados
+ex0/	ft_ancient_text.py	import sys, sys.argv, len(), open(), import typing, typing.IO, io.read(), io.close(), print()
+Informe de misión: Los Archivos han descubierto un fragmento de datos antiguo en la Bóveda de Almacenamiento 7. Tu primera tarea como Archivero de Datos es recuperar esta preciosa información antes de que se degrade aún más.
+
+Obtén el nombre de un archivo desde la línea de comandos, luego lee el contenido del archivo y muéstralo como lo haría el comando cat. Agrega algunos encabezados y pies de página como se muestra en el ejemplo. Debes manejar varios casos de fallo (archivos inexistentes, inaccesibles, etc.).
+
+¿Cuál es el tipo de los datos devueltos por open()?
+
+Ejemplo: (ver en el PDF original)
+
+Capítulo V – Ejercicio 1: Creación de Archivo
+Carpeta	Archivos a entregar	Autorizados
+ex1/	ft_archive_creation.py	import sys, sys.argv, len(), open(), import typing, typing.IO, io.read(), io.write(), io.close(), print(), input()
+Informe de misión: ¡Excelente trabajo en la recuperación de datos! Tu siguiente tarea es establecer un nuevo protocolo de preservación creando nuevas entradas de archivo.
+
+Usa el código creado para el ejercicio anterior. Al final del script, mejora el código para:
+
+Agregar un carácter especial de archivo (el carácter #) al final de cada línea (digamos, para que sea compatible con 2087).
+
+Mostrar el nuevo contenido.
+
+Preguntar al usuario el nombre del archivo donde guardar, o dejarlo vacío para no guardar nada.
+
+Guardar el nuevo contenido si se proporciona un nombre de archivo y mostrar un mensaje de cierre nuevo.
+
+Crea el archivo o reemplázalo si ya existe.
+
+Ejemplo: (ver PDF)
+
+Capítulo VI – Ejercicio 2: Gestión de Flujos
+Carpeta	Archivos a entregar	Autorizados
+ex2/	ft_stream_management.py	import sys, sys.argv, sys.stdout, sys.stderr, len(), open(), import typing, typing.IO, io.read(), io.readline(), io.write(), io.flush(), io.close(), print()
+Informe de misión: Los Archivos operan a través de tres canales sagrados de datos que han estado activos desde la fundación de la civilización digital. ¡Domina estos canales que son más antiguos que el propio Internet!
+
+Usa el código creado para el ejercicio anterior. Actualízalo para:
+
+Imprimir los mensajes de error resultantes de excepciones en el flujo de salida de error (stderr) en lugar de la salida estándar, con un prefijo claro (ver ejemplo).
+
+Obtener la entrada del usuario sin usar la función incorporada input().
+
+Ejemplo: (ver PDF)
+
+Capítulo VII – Ejercicio 3: Seguridad de la Bóveda
+Carpeta	Archivos a entregar	Autorizados
+ex3/	ft_vault_security.py	open(), read(), write(), print()
+Informe de misión: El Archivero Jefe ha notado tu potencial y te está ascendiendo a operaciones de Seguridad de Bóvedas. Aquí es donde los verdaderos archivistas se demuestran.
+
+Este ejercicio requiere el uso de la sentencia with (context manager) para garantizar un manejo adecuado de archivos. La sentencia with cierra automáticamente los archivos incluso si ocurren errores, evitando fugas de recursos.
+
+Crea una función secure_archive() que proporcione acceso seguro a cualquier archivo para lectura o escritura. Devuelve una tupla (True|False, str) que indica si la operación fue exitosa (el booleano) y proporciona el contenido asociado (ya sea el contenido del archivo o un mensaje de error). La función toma los siguientes parámetros: un nombre de archivo obligatorio, un int o str opcional (a tu elección) que indica la acción a realizar (leer o escribir), y otro string opcional que contiene el contenido a escribir en el archivo.
+
+Durante la defensa, se revisará la estructura del código para que coincida con estos requisitos.
+
+Ejemplo: (ver PDF)
+
+Capítulo VIII – Entrega y Envío
+Entrega tu tarea en tu repositorio Git como siempre. Solo el trabajo dentro de tu repositorio será evaluado durante la defensa. No dudes en verificar dos veces los nombres de tus archivos para asegurarte de que sean correctos.
+
+Durante la evaluación, se te puede pedir que expliques operaciones de archivos, demuestres el manejo de errores o muestres cómo funciona la sentencia with. Asegúrate de entender los conceptos detrás de cada ejercicio.
+
+Debes entregar solo los archivos solicitados por la especificación del proyecto. Enfócate en un código limpio y simple que demuestre claramente tu comprensión de las operaciones de archivos.

@@ -1,0 +1,240 @@
+
+
+# Ejercicio 0: Validación de Datos Agrícolas
+
+**Ejercicio 00**
+ft_first_exception
+**Directorio:** ex0/
+**Archivos a enviar:** ft_first_exception.py
+**Autorizado:** int(), print()
+
+Tu pipeline de datos de agricultura inteligente recibe lecturas de temperatura de sensores de campo. A veces los sensores transmiten datos corruptos o los agricultores ingresan valores no válidos a través de aplicaciones móviles. Tu capa de validación de datos debe filtrar los datos incorrectos antes de que corrompan tus análisis agrícolas.
+
+Escribe una función simple `input_temperature(temp_str)` que:
+
+- Toma una cadena de entrada como parámetro
+- La convierte en un número
+- Devuelve la temperatura como un entero
+
+Luego, escribe una función `test_temperature()` que realizará las siguientes pruebas en `input_temperature()`:
+
+- Usa una entrada válida ("25")
+- Usa una entrada no válida ("abc")
+- Maneja el caso en que `input_temperature()` falla; imprime un mensaje de error
+- Muestra que tu programa sigue ejecutándose a pesar del error
+
+Puedes usar la clase base Exception, o averiguar qué excepciones pueden ser lanzadas por `input_temperature()`.
+
+Depende de ti ajustar adecuadamente las anotaciones de tipo para estas dos funciones. Considera esta información válida para todos los ejercicios y próximos proyectos.
+
+
+==========
+
+
+# Ejercicio 1: Pipeline de Validación de Datos Agrícolas
+
+**Ejercicio 01**
+ft_raise_exception
+**Directorio:** ex1/
+**Archivos a enviar:** ft_raise_exception.py
+**Autorizado:** int(), print()
+
+En realidad, necesitas un control extra sobre tus datos. Incluso si la temperatura es un número válido, tus plantas no pueden crecer si hace demasiado frío o demasiado calor.
+
+Usa tu código del Ejercicio 0 y mejora `input_temperature()` y `test_temperature()` de la siguiente manera:
+
+En `input_temperature`:
+- Verifica si la temperatura es razonable para las plantas (0 a 40 grados Celsius, límites incluidos)
+- Devuelve la temperatura si es válida; de lo contrario, lanza una excepción.
+
+En `test_temperature`:
+- Agrega nuevas pruebas con valores extremos ("100", "-50")
+
+La parte principal de tu archivo llamará a `test_temperature()`.
+
+**Ejemplo:**
+
+```
+> python3 ft_raise_exception.py
+=== Garden Temperature Checker ===
+Input data is '25'
+Temperature is now 25°C
+Input data is 'abc'
+Caught input_temperature error: invalid literal for int() with base 10: 'abc'
+Input data is '100'
+Caught input_temperature error: 100°C is too hot for plants (max 40°C)
+Input data is '-50'
+Caught input_temperature error: -50°C is too cold for plants (min 0°C)
+All tests completed - program didn't crash!
+```
+
+==========
+
+## Capítulo VII
+
+## Ejercicio 2: Diferentes Tipos de Problemas
+
+**Ejercicio 02**
+ft_different_errors
+**Directorio:** ex2/
+**Archivos a enviar:** ft_different_errors.py
+**Autorizado:** print(), open(), int()
+
+Tu programa de jardín podría encontrar diferentes tipos de problemas. Python tiene diferentes tipos de errores para diferentes situaciones, y puedes atraparlos por separado o juntos.
+
+Escribe una función `garden_operations(operation_number)` que contenga código defectuoso. Para cada valor de `operation_number` entre 0 y 3, un fragmento diferente de código defectuoso lanzará una de las siguientes excepciones:
+
+- `ValueError` - cuando se proporcionan datos incorrectos (como 'abc' en lugar de un número a int())
+- `ZeroDivisionError` - cuando intentas dividir por cero
+- `FileNotFoundError` - cuando intentas abrir un archivo que no existe (y si no se abre, no es necesario cerrarlo)
+- `TypeError` - cuando intentas mezclar diferentes tipos que no se pueden mezclar (¿intentaste sumar una cadena y un número?)
+
+Otros valores de `operation_number` no contendrán código defectuoso y simplemente retornarán.
+
+Crea una función `test_error_types()` que:
+
+- Muestre cada tipo de error ocurriendo
+- Capture cada error y explique qué salió mal
+- Demuestre que tu programa continúa ejecutándose después de cada error
+- Muestre cómo atrapar múltiples tipos de error con un solo bloque `try:`
+
+
+**Ejemplo:**
+
+```
+> python3 ft_different_errors.py
+=== Garden Error Types Demo ===
+Testing operation 0...
+Caught ValueError: invalid literal for int() with base 10: 'abc'
+Testing operation 1...
+Caught ZeroDivisionError: division by zero
+Testing operation 2...
+Caught FileNotFoundError: [Errno 2] No such file or directory: '/non/existent/file'
+Testing operation 3...
+Caught TypeError: can only concatenate str (not "int") to str
+Testing operation 4...
+Operation completed successfully
+All error types tested successfully!
+```
+
+¿Por qué Python tiene diferentes tipos de errores? ¿Cómo puedes atrapar múltiples tipos de errores con un solo `try:`? Nota que no puedes usar `type()`.
+
+
+mypy mostrará un error para el código defectuoso que lanza el TypeError. ¡Ese es su trabajo! Así que, para probar esta excepción, necesitamos mantener este error a propósito.
+
+Ya has encontrado `open()` en C. Usarlo en Python es bastante sencillo.
+
+
+==========
+
+## Capítulo VIII
+
+## Ejercicio 3: Creando Tus Propios Tipos de Error
+
+**Ejercicio 03**
+ft_custom_errors
+**Directorio:** ex3/
+**Archivos a enviar:** ft_custom_errors.py
+**Autorizado:** print()
+
+A veces, los errores incorporados de Python no son lo suficientemente específicos para tu programa de jardín. Puedes crear tus propios tipos de error para hacer tu código más claro y útil.
+
+Crea estas simples clases de excepción personalizadas:
+
+- `GardenError` - Un error básico para problemas del jardín
+- `PlantError` - Para problemas con las plantas (hereda de GardenError)
+- `WaterError` - Para problemas con el riego (hereda de GardenError)
+
+Cada excepción personalizada debe:
+
+- Ser una clase simple que herede de Exception (o GardenError)
+- Tener un mensaje de error predeterminado específico (ej., "Error de planta desconocido") si no se proporciona ninguno
+
+===== Página 16 =====
+
+1
+
+Crea funciones que:
+
+- Lancen tus errores personalizados en diferentes situaciones
+- Muestren cómo atrapar tus tipos de error específicos
+- Demuestren que atrapar `GardenError` atrapa todos los errores relacionados con el jardín
+
+    
+¿Cuándo deberías crear tus propios tipos de error en lugar de usar los incorporados de Python? ¿Cómo ayuda la herencia a organizar los diferentes tipos de errores?
+
+===== Página 17 =====
+
+## Capítulo IX
+
+# Ejercicio 4: Bloque Finally - Siempre Limpiar
+
+**Ejercicio 04**
+ft_finally_block
+**Directorio:** ex4/
+**Archivos a enviar:** ft_finally_block.py
+**Autorizado:** print(), str.capitalize()
+
+Tu programa de jardín necesita limpiar los recursos, incluso si ha ocurrido un error. El bloque `finally` es perfecto para esto: siempre se ejecuta, haya ocurrido un error o no.
+
+Escribe una función `water_plant(plant_name)` que:
+
+- Intente regar la planta
+- Tenga éxito si el nombre de la planta está en mayúsculas (capitalizado)
+- Lance un error si el nombre de la planta no está en mayúsculas (usa tu excepción `PlantError` del ejercicio anterior)
+- Imprima un mensaje en caso de éxito
+
+Crea una función `test_watering_system()` que:
+
+- Abra el sistema de riego (solo imprime un mensaje)
+- Riegue varias plantas usando `water_plant()`
+- Use la estructura `try/except/finally`
+- Maneje errores si el nombre de una planta es inválido y no puede ser regada. En ese caso, detén la prueba y regresa inmediatamente al `main`.
+- Siempre cierre el sistema de riego en un bloque `finally`
+- Muestre que la limpieza siempre ocurre, incluso cuando hay un error
+
+===== Página 18 =====
+
+1
+
+**Ejemplo:**
+
+```
+> python3 ft_finally_block.py
+=== Garden Watering System ===
+Testing valid plants...
+Opening watering system
+Watering Tomato: [OK]
+Watering Lettuce: [OK]
+Watering Carrots: [OK]
+Closing watering system
+
+Testing invalid plants...
+Opening watering system
+Watering Tomato: [OK]
+Caught PlantError: Invalid plant name to water: 'lettuce' ending tests and returning to main
+Closing watering system
+Cleanup always happens, even with errors!
+```
+
+¿Por qué es importante limpiar los recursos incluso cuando ocurren errores? ¿Cómo ayuda el bloque `finally` a asegurar que la limpieza siempre ocurra?
+
+===== Página 19 =====
+
+1
+
+## Capítulo X
+
+## Entregar y Enviar
+
+Entrega tu asignación en tu repositorio de Git como es habitual. Solo el trabajo dentro de tu repositorio será evaluado durante la defensa. No dudes en verificar dos veces los nombres de tus archivos para asegurarte de que sean correctos.
+
+**[Imagen]**
+
+Durante la evaluación, es posible que se te pida explicar conceptos de manejo de errores, demostrar cómo funcionan las excepciones en tus programas de jardín o mostrar cómo tu sistema maneja diferentes tipos de problemas. Asegúrate de entender los principios detrás de tu código.
+
+**[Imagen]**
+
+Necesitas enviar solo los archivos solicitados por el enunciado de este proyecto. Concéntrate en un código limpio y legible que demuestre claramente conceptos de manejo de errores y programación defensiva.
+
+**[Fin del contenido del archivo]**

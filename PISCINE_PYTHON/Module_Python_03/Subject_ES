@@ -1,0 +1,402 @@
+
+## Capítulo III
+
+## Introducción
+
+¡Bienvenido de nuevo al reino digital, ingeniero de datos!
+
+Tu viaje a través de los fundamentos de Python te ha preparado bien. Has dominado la sintaxis básica que alimenta los jardines digitales, construido jerarquías de clases robustas que modelan sistemas del mundo real y aprendido a manejar lo inesperado con una gestión elegante de excepciones. Ahora estás listo para abordar el corazón de la ingeniería de datos: las colecciones y estructuras de datos que explorarás en un entorno de juegos.
+
+Imagina esto: En 1980, todo el estado del juego de Pac-Man —cada punto, posición de fantasma y puntuación— cabía en solo 16KB de RAM. ¡Los programadores tenían que ser magos de la eficiencia! Descubrieron que organizar los datos no solo ahorraba memoria: se trataba de desbloquear la magia del juego. Avancemos hasta hoy: Fortnite procesa más de 10 millones de jugadores concurrentes, cada uno generando miles de puntos de datos por segundo. ¡Mismos principios, patio de recreo más grande!
+
+Los tipos de colección de Python están diseñados para varios casos de uso, y cada uno tiene sus propias características específicas: listas (ordenadas, indexadas, expandibles), tuplas (ordenadas, inmutables, hasheables), conjuntos (colecciones no ordenadas de elementos únicos) y diccionarios (pares clave-valor).
+
+Además de estos vienen los generadores y las comprensiones, añadiendo potente sintaxis y comportamientos.
+
+En esta quest, construirás los componentes para soportar una plataforma de análisis de juegos. Cada ejercicio desbloquea un nuevo tipo de datos y, al final, ¡manejarás las colecciones de Python como un ingeniero de datos!
+
+A partir de este proyecto, y cuando sea introducido adecuadamente por un ejercicio, podrás usar cada nueva estructura de datos de Python y todos sus métodos de clase asociados.
+
+
+
+
+
+## Capítulo IV
+
+## Instrucciones Comunes
+
+## IV.1 Reglas Generales
+
+IV.1 Reglas Generales
+- Tu proyecto debe estar escrito en Python 3.10 o posterior.
+- Tu proyecto debe adherirse al estándar de codificación flake8.
+- Todas las funciones y métodos deben incluir anotaciones de tipo; verifica esto usando mypy.
+- Tus funciones deben manejar las excepciones con elegancia para evitar fallos.
+- Para este proyecto, necesitarás acceso a los parámetros de línea de comandos. Lo harás usando el módulo sys a través del mecanismo de importación. Las importaciones se abordarán con más detalle en un proyecto futuro.
+- No se permiten operaciones de entrada/salida de archivos. Todos los datos deben procesarse en memoria o a través de argumentos de línea de comandos.
+- Enfócate en demostrar claramente los patrones de uso de colecciones.
+- Muestra tanto operaciones básicas como técnicas avanzadas para cada estructura de datos.
+
+Los siguientes tipos estándar están permitidos, junto con todos sus métodos y constructores asociados: str, int, float.
+
+## IV.2 Guías Adicionales
+
+Envía tu trabajo al repositorio Git asignado. Solo se evaluará el contenido en este repositorio.
+
+
+
+
+
+# Ejercicio 0: Command Quest
+
+
+`Exercise0: ft_command_quest`
+`Directorio: ex0/`
+`Archivos a entregar: ft_command_quest.py`
+`Autorizado: import sys, sys.argv, len(), print()`
+
+¡Bienvenido, Aventurero de Datos! Cada quest épica comienza con la comprensión de tus herramientas. En el reino digital, los programas necesitan recibir instrucciones del mundo exterior. ¡Tu primera misión es descubrir cómo los programas pueden recibir mensajes de sus usuarios!
+
+Es hora de introducir las listas. Antes de construir tus propias listas, manipulemos una lista que ya existe: los parámetros de línea de comandos, disponibles a través del módulo `sys`. La estructura es similar a la de C: un array de cadenas. Explora cómo acceder y manipular elementos de una lista.
+
+Construye un script simple que muestre los datos recibidos como parámetros de línea de comandos. Imita el ejemplo de abajo.
+
+```python
+$ python3 ft_command_quest.py
+```
+```
+== Command Quest ==
+Program name: ft_command_quest.py
+No arguments provided!
+Total arguments: 1
+```
+
+```python
+$ python3 ft_command_quest.py hello world 42
+```
+```
+== Command Quest ==
+Program name: ft_command_quest.py
+Arguments received: 3
+Argument 1: hello
+Argument 2: world
+Argument 3: 42
+Total arguments: 4
+```
+
+```python
+$ python3 ft_command_quest.py "Data Quest"
+```
+```
+== Command Quest ==
+Program name: ft_command_quest.py
+Arguments received: 1
+Argument 1: Data Quest
+Total arguments: 2
+```
+
+Simplemente usa "import sys" al inicio de tu script para acceder a la lista `sys.argv`.
+
+Hay varias formas de evitar imprimir el nombre del programa nuevamente con los argumentos. Prepárate para discutir soluciones alternativas durante la evaluación.
+
+
+
+
+ Capítulo VI
+
+# Ejercicio 1: Score Cruncher
+
+
+`Exercise1: ft_score_analytics`
+`Directorio: ex1/`
+`Archivos a entregar: ft_score_analytics.py`
+`Autorizado: import sys, sys.argv, len(), sum(), max(), min(), print()`
+
+Informe de la misión: ¡Ahora que has dominado la comunicación de comandos, es hora de una limpieza de datos! Efectivamente, el usuario que envía comandos al programa es humano y puede cometer errores.
+
+Este ejercicio requiere que uses listas para almacenar puntuaciones y bloques `try/except` para manejar entradas no válidas con elegancia (por ejemplo, cuando un usuario proporciona valores no numéricos).
+
+Recibirás puntuaciones de juegos como parámetros de línea de comandos. Necesitas:
+
+- Procesar los argumentos de línea de comandos
+- Manejar los diversos casos erróneos (sin argumentos, valores no numéricos) con mensajes apropiados
+- Crear una nueva lista para almacenar y organizar las puntuaciones
+- Calcular algunas estadísticas básicas que harían feliz a cualquier jugador (número, total, promedio, máximo, mínimo y rango)
+- Hacer que la salida sea lo suficientemente atractiva para impresionar a tus amigos jugadores (puedes imitar el ejemplo nuevamente)
+- Si se proporcionan entradas tanto válidas como no válidas a través de la línea de comandos, descarta las no válidas y continúa con las entradas válidas restantes a menos que no quede ninguna.
+
+
+
+
+
+ Capítulo VII
+
+## Ejercicio 2: Position Tracker
+
+
+`Exercise2: ft_coordinate_system`
+`Directorio: ex2/`
+`Archivos a entregar: ft_coordinate_system.py`
+`Autorizado: import math, math.sqrt(), input(), round(), print()`
+
+¡Sube de nivel! ¡Es hora de dominar las coordenadas 3D! ¿Recuerdas cuando jugabas juegos donde te teletransportabas a ubicaciones específicas en un mundo 3D? ¿O cuando necesitas encontrar la distancia entre dos puntos en el espacio 3D? ¡Eso es exactamente lo que estamos construyendo!
+
+Este ejercicio requiere el uso de tuplas para almacenar coordenadas 3D (x, y, z).
+
+Primero, escribe una función `get_player_pos()` que:
+
+- Pregunte al usuario las nuevas coordenadas del jugador en el formato `x,y,z`
+- Maneje entradas incorrectas
+- Reintente hasta que se proporcione un conjunto válido de coordenadas
+- Devuelva una tupla que contenga las coordenadas 3D actuales del jugador
+
+Luego, tu código deberá:
+
+- Obtener un primer conjunto de coordenadas
+- Mostrar la tupla y luego mostrar cada coordenada por separado
+- Calcular la distancia al centro 3D (0, 0, 0) (ver abajo)
+- Obtener un nuevo conjunto de coordenadas
+- Calcular la distancia entre el segundo y el primer conjunto de coordenadas
+
+
+**Fórmula de Distancia:** Para calcular la distancia entre dos puntos 3D, usamos la fórmula de distancia euclidiana \(\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2 + (z_2 - z_1)^2}\) .
+
+Para puntos (x1, y1, z1) y (x2, y2, z2), la distancia es `math.sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2)`. ¡Esta es solo la extensión 3D del teorema de Pitágoras!
+
+imagen[[122, 197, 879, 382]]
+
+imagen[[147, 444, 219, 501]]
+
+Simplemente usa `import math` al inicio de tu script para usar `math.sqrt()`.
+
+imagen[[122, 550, 222, 606]]
+
+Las tuplas son como datos escritos en piedra. Una vez creadas, no cambian.
+
+
+
+
+
+## **Capítulo VIII**
+
+### **Ejercicio 3: Achievement Hunter (Cazador de Logros)**
+
+* 
+**Directorio:** `ex3/` 
+**Nombre del ejercicio:** `Exercise3` 
+**Archivo a entregar:** `ft_achievement_tracker.py` 
+**Funciones autorizadas:** `len()`, `print()`, `import random`, `random.*`, `set()`, `set.union()`, `set.intersection()`, `set.difference()` 
+
+
+
+**Descripción:**
+¡Logro desbloqueado! ¡Es hora de construir el sistema de logros más genial de todos! ¿Sabes lo satisfactorio que es cuando desbloqueas ese logro raro? ¡Ahora vas a construir el sistema que los rastrea todos! 
+
+Este ejercicio requiere el uso de **conjuntos (sets)** para almacenar logros únicos y realizar operaciones (unión, intersección, diferencia) para analizar las colecciones de logros entre jugadores. 
+
+**Instrucciones:**
+
+1. Crea una función `gen_player_achievements()` que use una lista fija y grande de logros para asignar aleatoriamente un conjunto a un jugador. 
+
+
+2. Elige un número aleatorio de logros y selecciónalos de la lista para construir y devolver el conjunto. 
+
+
+3. Tu código deberá:
+* Generar conjuntos de logros para un mínimo de **cuatro jugadores** diferentes. 
+
+
+* Rastrear los logros únicos entre todos los jugadores. 
+
+ v
+* Encontrar los logros compartidos por **todos** los jugadores. 
+
+
+* Para cada jugador, identificar los logros que nadie más tiene. 
+
+
+* Para cada jugador, listar los logros que le faltan para tenerlos todos. 
+
+
+
+
+
+> 
+> **Nota:** Ajusta el número total de logros y cuántos seleccionas por jugador para que sea probable que los conjuntos resultantes no estén vacíos. Por cierto, ¿cómo imprime Python un conjunto vacío y por qué? 
+> 
+> 
+
+
+
+
+
+## **Capítulo IX**
+
+### **Ejercicio 4: Inventory Master (Maestro del Inventario)**
+
+* 
+**Directorio:** `ex4/` 
+
+
+* 
+**Nombre del ejercicio:** `Exercise4` 
+
+
+* 
+**Archivo a entregar:** `ft_inventory_system.py` 
+
+
+* 
+**Funciones autorizadas:** `import sys`, `sys.argv`, `len()`, `print()`, `sum()`, `list()`, `round()`, `dict.keys()`, `dict.values()`, `dict.update()` 
+
+
+
+**Descripción:**
+¡Hora del botín! ¿Recuerdas organizar tu inventario en los RPGs? ¿O revisar si tienes esa espada legendaria? ¡Es hora de construir el sistema de inventario definitivo! Este ejercicio requiere el uso de **diccionarios** para almacenar los datos del inventario. 
+
+**Instrucciones:**
+
+1. El código debe procesar los parámetros de la línea de comandos para llenar el sistema. 
+
+
+2. Cada parámetro debe seguir el formato: `<nombre_objeto>:<cantidad>`. Descarta parámetros inválidos (sintaxis incorrecta o parámetros redundantes) con un mensaje de error y guarda los válidos en un diccionario. 
+
+
+3. Las cantidades deben almacenarse como **int** (enteros). 
+
+
+4. **Operaciones a realizar:**
+* Mostrar el inventario. 
+
+
+* Crear y mostrar una lista de todos los objetos en el inventario. 
+
+
+* Calcular e imprimir la cantidad total de todos los objetos. 
+
+
+* Mostrar el porcentaje que representa cada objeto sobre el total. 
+
+
+* Informar cuál es el objeto más y menos abundante (en caso de empate, elige el primero que apareció en la línea de comandos). 
+
+
+* Finalmente, añade un nuevo objeto al inventario y muéstralo de nuevo. 
+
+
+
+
+
+---
+
+## **Capítulo X**
+
+### **Ejercicio 5: Stream Wizard (Mago del Flujo)**
+
+* 
+**Directorio:** `ex5/` 
+**Nombre del ejercicio:** `Exercise5`  
+**Archivo a entregar:** `ft_data_stream.py` 
+**Funciones autorizadas:** `next()`, `range()`, `len()`, `print()`, `import typing`, `typing.Generator`, `import random`, `random.*` 
+
+**Descripción:**
+¡Hora de la magia! ¿Te has preguntado cómo los juegos manejan millones de eventos sin colapsar? ¡Bienvenido al mundo de los **generadores**, el superpoder de Python para ahorrar memoria! Debes implementar funciones generadoras que produzcan valores bajo demanda en lugar de almacenarlo todo en memoria. 
+
+**Instrucciones:**
+
+1. Crea una función generadora infinita `gen_event()` que elija un nombre aleatorio de una lista de jugadores y una acción aleatoria de una lista de acciones. Cada vez que se llame a `next()`, debe devolver una tupla `(nombre, accion)`. 
+
+
+2. En el script principal, realiza un bucle de 1000 iteraciones y muestra los 1000 eventos obtenidos de `gen_event()`. 
+
+
+3. Crea una lista de diez tuplas generadas nuevamente por `gen_event()`. 
+
+
+4. Crea una nueva función generadora `consume_event` que tome la lista anterior, elija aleatoriamente uno de sus elementos, lo elimine de la lista y lo entregue (`yield`), hasta que la lista esté vacía. Este generador debe usarse directamente en un constructor `for in`. 
+
+
+
+---
+
+## **Capítulo XI**
+
+### **Ejercicio 6: Data Alchemist (Alquimista de Datos)**
+
+**Directorio:** `ex6/` 
+**Nombre del ejercicio:** `Exercise6` 
+**Archivo a entregar:** `ft_data_alchemist.py` 
+**Funciones autorizadas:** `import random`, `random.*`, `print()`, `len()`, `sum()`, `round()` 
+
+**Descripción:**
+¡Es la hora del Jefe Final! Ya dominas las estructuras de datos.  ¡Ahora es momento de descubrirlas en una forma elegante y condensada! Aquí es donde te conviertes en un verdadero Alquimista de Datos. Este ejercicio requiere el uso de **comprensión de listas (list comprehensions)** y **diccionarios** para transformar y filtrar datos de manera eficiente. 
+
+**Instrucciones:**
+
+1. Crea una lista de nombres de jugadores (algunos en mayúsculas, otros no). 
+
+
+2. Crea dos comprensiones de lista: la primera para normalizar todos los nombres a mayúsculas; la segunda para filtrar solo los nombres que ya estaban en mayúsculas en la lista inicial. 
+
+
+3. Crea un diccionario usando la lista completa de nombres normalizados (en mayúsculas). Los nombres serán las **llaves** y los **valores** serán puntajes generados aleatoriamente. 
+
+
+4. Crea un segundo diccionario, también mediante comprensión, que contenga solo aquellos con puntajes superiores al promedio. 
+
+
+
+> 
+> **Regla:** Cada comprensión debe ocupar una sola línea (a menos que exceda el tamaño de la línea). 
+> 
+> 
+
+
+
+
+
+
+def main() -> None:
+    original_names = ["aRagorn", "Legolas", "GIMLI", "Frodo", "sam", "GANDALF"]
+    print("Original names:", original_names)
+
+    # All uppercase
+    names_upper = [name.upper() for name in original_names]
+    print("All uppercase:", names_upper)
+
+    # Only those already uppercase in original
+    already_upper = [name for name in original_names if name.isupper()]
+    print("Already uppercase (original):", already_upper)
+
+    # Dictionary name -> random score
+    scores = {name.upper(): random.randint(50, 200) for name in original_names}
+    print("\nScores dictionary:", scores)
+
+    avg_score = sum(scores.values()) / len(scores)
+    print(f"Average score: {avg_score:.2f}")
+
+    # High performers
+    high_performers = {
+        name: score for name, score in scores.items() if score > avg_score
+    }
+    print("High performers (above average):", high_performers)
+
+
+
+---
+
+## **Capítulo XII: Entrega y Envío**
+
+* Entrega tu trabajo en tu repositorio Git como de costumbre. 
+
+
+* Solo se evaluará el trabajo dentro del repositorio durante la defensa. 
+
+
+* Asegúrate de que los nombres de los archivos sean correctos. 
+
+
+* Durante la evaluación, es posible que se te pida explicar la elección de las estructuras de datos o demostrar operaciones de colecciones. 
+
+
+* Enfócate en un código limpio y bien documentado que demuestre maestría en los tipos de colecciones de Python.

@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+
+# ************************************************************************ #
+#                                                                          #
+#                                                      :::      ::::::::   #
+#   ft_raise_exception.py                            ::+::    :+:    :+:   #
+#                                                  +:+ +:+         +:+     #
+#   By: lestrada <lestrada@student.42.es>        +#+  +:+       +#+        #
+#                                              +#+#+#+#+#+   +#+           #
+#   Created: 2026/05/06 by lestrada                 #+#    #+#             #
+#   Updated: 2026/05/10 by lestrada                ###   ########.es       #
+#                                                                          #
+# ************************************************************************ #
+
+
+def input_temperature(temp_str: str) -> float:
+    temperature = float(temp_str.strip())
+    if temperature < 0:
+        raise IndexError(f"{temperature}°C is too cold for plants (min 0°C)")
+    if temperature > 40:
+        raise IndexError(f"{temperature}°C is too hot for plants (max 40°C)")
+    return temperature
+
+def test_temperature() -> None:
+    print("=== Garden Temperature Checker ===")
+    tests = ["25", "abc", "100", "-50"]
+    for value in tests:
+        print(f"Input data is '{value}'")        # corregido: muestra cada valor real
+        try:
+            temp = input_temperature(value)
+            print(f"Temperature is now {temp}°C")
+        except ValueError as e:
+            print(f"Caught input_temperature error: {e}")
+        print()
+
+    print("All tests completed - program didn't crash!")
+
+if __name__ == "__main__":
+    test_temperature()
+
+  # .strip() controla valores raros de entrada como float(" 25 \n") → "25"

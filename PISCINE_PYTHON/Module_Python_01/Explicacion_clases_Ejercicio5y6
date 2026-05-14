@@ -1,0 +1,1353 @@
+Module Python 01
+Explicacion del ejercicio 5 y 6
+
+ex05 -> encapsulamiento y polimorfismo
+
+ex06 -> métodos estáticos, métodos de clase, clases anidadas
+
+---
+
+# EJERCICIO 5: Specialized Plant Types
+
+## 📋 Resumen del enunciado
+
+Tienes que crear **tres tipos especializados de plantas** (Flor, Árbol, Vegetal) que hereden de una clase `Plant` base. Cada tipo tiene atributos y métodos específicos. Debes evitar repetir código usando `super()`. Al final, crear una instancia de cada tipo y demostrar su funcionamiento.
+
+## 🧠 Conceptos introducidos
+
+| Concepto | Qué es | Por qué se usa aquí |
+|----------|--------|---------------------|
+| **Herencia** | Una clase hija hereda de una clase padre | `Flower`, `Tree`, `Vegetable` heredan de `Plant` |
+| **`super()`** | Llama a métodos de la clase padre | Para reutilizar `__init__` y `show()` sin duplicar código |
+| **Sobrescritura de métodos** | Redefinir un método de la padre en la hija | `show()` en cada clase hija añade info extra |
+| **Atributos específicos** | Propiedades únicas de cada tipo | `color`, `trunk_diameter`, `harvest_season` |
+
+## 🔧 Qué tienes que hacer paso a paso
+
+### Paso 1: Tener la clase `Plant` (del ejercicio anterior)
+```python
+class Plant:
+    def __init__(self, name: str, height: float, age: int) -> None:
+        self.name = name
+        self.height = height
+        self.age = age
+    
+    def grow(self, amount: float) -> None:
+        self.height += amount
+    
+    def age(self, days: int) -> None:
+        self.age += days
+    
+    def show(self) -> str:
+        return f"{self.name}: {self.height}cm, {self.age} days old"
+```
+
+### Paso 2: Crear `Flower` (hereda de `Plant`)
+```python
+class Flower(Plant):
+    def __init__(self, name: str, height: float, age: int, color: str) -> None:
+        super().__init__(name, height, age)  # ← llama al __init__ de Plant
+        self.color = color
+        self._bloomed = False  # opcional: estado interno
+    
+    def bloom(self) -> str:
+        self._bloomed = True
+        return f"{self.name} is blooming beautifully!"
+    
+    def show(self) -> str:
+        # Reutiliza el show de Plant y añade color
+        base = super().show()
+        return f"{base}\nColor: {self.color}"
+```
+
+### Paso 3: Crear `Tree`
+```python
+class Tree(Plant):
+    def __init__(self, name: str, height: float, age: int, trunk_diameter: float) -> None:
+        super().__init__(name, height, age)
+        self.trunk_diameter = trunk_diameter
+    
+    def produce_shade(self) -> str:
+        return f"Tree {self.name} now produces a shade of {self.height}cm long and {self.trunk_diameter}cm wide."
+    
+    def show(self) -> str:
+        base = super().show()
+        return f"{base}\nTrunk diameter: {self.trunk_diameter}cm"
+```
+
+### Paso 4: Crear `Vegetable`
+```python
+class Vegetable(Plant):
+    def __init__(self, name: str, height: float, age: int, harvest_season: str, nutritional_value: int = 0) -> None:
+        super().__init__(name, height, age)
+        self.harvest_season = harvest_season
+        self.nutritional_value = nutritional_value
+    
+    def grow(self, amount: float) -> None:
+        super().grow(amount)
+        self.nutritional_value += int(amount)  # crece valor nutricional
+    
+    def age(self, days: int) -> None:
+        super().age(days)
+        self.nutritional_value += days
+    
+    def show(self) -> str:
+        base = super().show()
+        return f"{base}\nHarvest season: {self.harvest_season}\nNutritional value: {self.nutritional_value}"
+```
+
+## ❓ Por qué se hace así
+
+| Decisión | Razón |
+|----------|-------|
+| Usar `super()` | Para no repetir el código de `__init__` ni el de `show()` |
+| Sobrescribir `show()` | Para añadir información específica manteniendo la base |
+| Sobrescribir `grow()` y `age()` en `Vegetable` | Porque el valor nutricional debe actualizarse junto con el crecimiento |
+| No validar atributos | El enunciado lo permite explícitamente |
+
+## 🐛 Problemas comunes y dificultades
+
+### 1. **Olvidar `super().__init__()`**
+```python
+# ❌ MALO - name, height, age no se inicializan
+class Flower(Plant):
+    def __init__(self, name, height, age, color):
+        self.color = color  # ¡falta super()!
+
+# ✅ BUENO
+class Flower(Plant):
+    def __init__(self, name, height, age, color):
+        super().__init__(name, height, age)
+        self.color = color
+```
+
+### 2. **No respetar la firma del método padre**
+```python
+# ❌ MALO - show() debería devolver str, no imprimir directamente
+def show(self):
+    print("algo")
+
+# ✅ BUENO
+def show(self) -> str:
+    return "algo"
+```
+
+### 3. **Duplicar código en lugar de usar `super()`**
+```python
+# ❌ MALO - repites el formato base
+def show(self):
+    return f"{self.name}: {self.height}cm, {self.age} days old\nColor: {self.color}"
+
+# ✅ BUENO
+def show(self):
+    return f"{super().show()}\nColor: {self.color}"
+```
+
+### 4. **Error con `mypy --strict`** (forward reference ya visto)
+```python
+# ❌ MALO
+@classmethod
+def create_anonymous(cls) -> Plant:  # Plant no está definido aún
+
+# ✅ BUENO
+@classmethod
+def create_anonymous(cls) -> "Plant":
+```
+
+### 5. **En `Vegetable`, olvidar llamar a `super().grow()`**
+```python
+# ❌ MALO - la altura no aumenta
+def grow(self, amount):
+    self.nutritional_value += amount
+
+# ✅ BUENO
+def grow(self, amount):
+    super().grow(amount)
+    self.nutritional_value += amount
+```
+
+---
+
+# EJERCICIO 6: Garden Analytics
+
+## 📋 Resumen del enunciado
+
+Amplía las clases del ejercicio 5 añadiendo:
+- Método `staticmethod` en `Plant` para comprobar si una edad > 1 año
+- Método `classmethod` para crear planta "anónima"
+- Clase `Seed` que hereda de `Flower` (añade contador de semillas)
+- Sistema interno de estadísticas **como clase anidada (nested)**
+- Estadística extra para `Tree` (número de veces que produce sombra)
+- Función independiente para mostrar estadísticas de cualquier planta
+
+## 🧠 Conceptos introducidos
+
+| Concepto | Qué es | Por qué se usa aquí |
+|----------|--------|---------------------|
+| **`@staticmethod`** | Método que no accede a `self` ni `cls` | `is_older_than_year(age)` - no necesita la planta |
+| **`@classmethod`** | Método que recibe la clase (`cls`) | `create_anonymous()` - crea instancias |
+| **Clase anidada (nested)** | Clase definida dentro de otra | Sistema de estadísticas interno y encapsulado |
+| **Herencia múltiple / profunda** | `Seed` hereda de `Flower` que hereda de `Plant` | Reutilizar todo el comportamiento de `Flower` |
+| **Encapsulación** | Ocultar atributos internos | Las estadísticas deben ser privadas |
+
+## 🔧 Qué tienes que hacer paso a paso
+
+### Paso 1: `staticmethod` en `Plant`
+```python
+class Plant:
+    # ... resto de métodos ...
+    
+    @staticmethod
+    def is_older_than_year(age: int) -> bool:
+        """365 days = 1 year"""
+        return age > 365
+```
+
+### Paso 2: `classmethod` para crear planta anónima
+```python
+class Plant:
+    # ...
+    
+    @classmethod
+    def create_anonymous(cls) -> "Plant":
+        return cls("Unknown plant", 0.0, 0)
+```
+
+### Paso 3: Clase anidada `Stats` (dentro de `Plant`)
+```python
+class Plant:
+    
+    class Stats:
+        """Nested class for tracking method calls"""
+        def __init__(self) -> None:
+            self._grow_calls: int = 0
+            self._age_calls: int = 0
+            self._show_calls: int = 0
+        
+        def record_grow(self) -> None:
+            self._grow_calls += 1
+        
+        def record_age(self) -> None:
+            self._age_calls += 1
+        
+        def record_show(self) -> None:
+            self._show_calls += 1
+        
+        def display(self) -> str:
+            return f"Stats: {self._grow_calls} grow, {self._age_calls} age, {self._show_calls} show"
+    
+    def __init__(self, name: str, height: float, age: int) -> None:
+        # ... atributos existentes ...
+        self._stats = self.Stats()  # ← instancia de la clase anidada
+    
+    def grow(self, amount: float) -> None:
+        self._stats.record_grow()  # ← registrar llamada
+        self.height += amount
+    
+    def age(self, days: int) -> None:
+        self._stats.record_age()
+        self.age += days
+    
+    def show(self) -> str:
+        self._stats.record_show()
+        return f"{self.name}: {self.height}cm, {self.age} days old"
+    
+    def get_stats(self) -> str:
+        return self._stats.display()
+```
+
+### Paso 4: Estadística extra para `Tree` (sobrescribir método)
+```python
+class Tree(Plant):
+    class Stats(Plant.Stats):  # ← heredar de Stats anidada
+        def __init__(self) -> None:
+            super().__init__()
+            self._shade_calls: int = 0
+        
+        def record_shade(self) -> None:
+            self._shade_calls += 1
+        
+        def display(self) -> str:
+            base = super().display()
+            return f"{base}\n{self._shade_calls} shade"
+    
+    def __init__(self, name: str, height: float, age: int, trunk_diameter: float) -> None:
+        super().__init__(name, height, age)
+        self.trunk_diameter = trunk_diameter
+        # Reemplazar _stats con la versión extendida
+        self._stats = self.Stats()
+    
+    def produce_shade(self) -> str:
+        self._stats.record_shade()  # ← registrar shade
+        return f"Tree {self.name} now produces a shade of {self.height}cm long and {self.trunk_diameter}cm wide."
+```
+
+### Paso 5: Clase `Seed` (hereda de `Flower`)
+```python
+class Seed(Flower):
+    def __init__(self, name: str, height: float, age: int, color: str, seeds: int = 0) -> None:
+        super().__init__(name, height, age, color)
+        self.seeds = seeds
+    
+    def bloom(self) -> str:
+        super().bloom()
+        self.seeds = 42  # o algún cálculo
+        return f"{self.name} is blooming beautifully!"
+    
+    def show(self) -> str:
+        base = super().show()
+        return f"{base}\nSeeds: {self.seeds}"
+```
+
+### Paso 6: Función independiente para estadísticas
+```python
+def display_plant_stats(plant: Plant) -> None:
+    """Any plant, any type - polymorphism at work!"""
+    print(f"[statistics for {plant.name}]")
+    print(plant.get_stats())
+```
+
+## ❓ Por qué se hace así
+
+| Decisión | Razón |
+|----------|-------|
+| Clase anidada `Stats` | Encapsulación - la lógica de estadísticas está dentro de `Plant` |
+| `staticmethod` | No necesita acceso a la instancia - solo opera en parámetros |
+| `classmethod` | Necesita crear instancias de la clase (`cls`) |
+| `Seed` hereda de `Flower` | Las semillas vienen de flores, comparten color y floración |
+| Función independiente | Polimorfismo - funciona con `Plant`, `Flower`, `Tree`, `Seed`, etc. |
+| `_stats` como atributo privado | Encapsulación - las estadísticas no deben modificarse directamente |
+
+## 🐛 Problemas comunes y dificultades
+
+### 1. **Confundir `@staticmethod` con `@classmethod`**
+```python
+# ❌ MALO - necesita cls pero usas staticmethod
+@staticmethod
+def create_anonymous(cls):  # ¡cls no existe en staticmethod!
+
+# ✅ BUENO
+@classmethod
+def create_anonymous(cls):
+    return cls("Unknown", 0.0, 0)
+```
+
+### 2. **No reiniciar `_stats` en `Tree`**
+```python
+# ❌ MALO - Tree usa Stats de Plant sin shade_calls
+def __init__(self, ...):
+    super().__init__(...)  # _stats = Plant.Stats() → no tiene shade_calls!
+
+# ✅ BUENO
+def __init__(self, ...):
+    super().__init__(...)
+    self._stats = self.Stats()  # usa Tree.Stats
+```
+
+### 3. **Olvidar llamar a `super().show()` en `Seed`**
+```python
+# ❌ MALO - pierdes color y otros atributos
+def show(self):
+    return f"{self.name}: {self.height}cm, {self.age} days old\nSeeds: {self.seeds}"
+
+# ✅ BUENO
+def show(self):
+    return f"{super().show()}\nSeeds: {self.seeds}"
+```
+
+### 4. **Mypy con clases anidadas**
+```python
+# Puede dar error si accedes a Stats antes de definirlo
+class Plant:
+    def __init__(self):
+        self._stats = self.Stats()  # OK, ya está definido dentro
+    
+    class Stats:
+        ...
+```
+
+### 5. **Encapsulación débil (atributos públicos)**
+```python
+# ❌ MALO - cualquiera puede modificar stats directamente
+self.stats = Stats()  # público
+
+# ✅ BUENO
+self._stats = Stats()  # privado por convención
+```
+
+---
+
+## 📊 Comparación rápida Ej5 vs Ej6
+
+| Aspecto | Ejercicio 5 | Ejercicio 6 |
+|---------|-------------|-------------|
+| **Objetivo** | Crear tipos especializados | Añadir analíticas y estadísticas |
+| **Nuevos conceptos** | Herencia, `super()` | `staticmethod`, `classmethod`, clases anidadas |
+| **Dificultad añadida** | Sobrescritura de métodos | Encapsulación, herencia de clases anidadas |
+| **Complejidad** | ⭐⭐ | ⭐⭐⭐⭐ |
+
+---
+
+
+##################################################################################################
+##################################################################################################
+
+# Encapsulamiento y Polimorfismo en Python
+
+Te explico estos dos conceptos fundamentales de la programación orientada a objetos, aplicados a los ejercicios de tu proyecto.
+
+---
+
+# 1. ENCAPSULAMIENTO
+
+## ¿Qué es?
+
+El **encapsulamiento** es el mecanismo que **oculta los detalles internos** de una clase y **protege los datos** para que no sean modificados directamente desde fuera. Solo se accede a ellos a través de métodos controlados.
+
+## Analogía simple
+
+Imagina un **cafetera**:
+- **Datos internos escondidos**: temperatura del agua, nivel del depósito, presión de la bomba
+- **Interfaz pública**: botón "encender", botón "hacer café", indicador de nivel
+
+Tú no necesitas saber cómo funciona internamente, solo usas los botones. Y no puedes modificar directamente la temperatura del agua desde fuera.
+
+## En Python: convenciones y mecanismos
+
+| Nivel | Sintaxis | Acceso |
+|-------|----------|--------|
+| **Público** | `self.name` | Accesible desde cualquier lado |
+| **Protegido** (convención) | `self._name` | "No toques esto" - pero se puede |
+| **Privado** (name mangling) | `self.__name` | Python oculta el nombre (no es 100% privado) |
+
+### Ejemplo básico
+
+```python
+class Plant:
+    def __init__(self, name: str, height: float) -> None:
+        self.name = name              # ✅ público - todo el mundo puede ver/editar
+        self._height = height         # ⚠️ protegido - convención: "no tocar"
+        self.__secret_internal = 0    # 🔒 privado - name mangling
+    
+    def grow(self, amount: float) -> None:
+        """Método público para modificar _height de forma controlada"""
+        if amount > 0:
+            self._height += amount
+    
+    def get_height(self) -> float:
+        """Método público para leer _height"""
+        return self._height
+
+# Uso
+p = Plant("Rose", 10.0)
+p.name = "Changed"      # ✅ permite - es público
+p._height = 999.0       # ⚠️ permite pero es mala práctica (rompe encapsulación)
+p.grow(5.0)             # ✅ forma correcta
+print(p.get_height())   # ✅ forma correcta de leer
+# print(p.__secret_internal)  # ❌ AttributeError - no se puede acceder
+```
+
+## ¿Por qué encapsular? (aplicado a tu ejercicio 6)
+
+En tu `Plant` con estadísticas, usas **encapsulación** para proteger los contadores:
+
+```python
+class Plant:
+    class Stats:
+        def __init__(self) -> None:
+            self._grow_calls: int = 0   # protegido
+            self._age_calls: int = 0    # protegido
+            self._show_calls: int = 0   # protegido
+        
+        def record_grow(self) -> None:
+            """Solo este método puede incrementar el contador"""
+            self._grow_calls += 1
+        
+        def display(self) -> str:
+            """Lectura controlada de los datos"""
+            return f"Stats: {self._grow_calls} grow..."
+    
+    def __init__(self, name: str, height: float, age: int) -> None:
+        self._stats = self.Stats()  # ← ¡encapsulado! no accesible desde fuera
+    
+    def grow(self, amount: float) -> None:
+        self._stats.record_grow()   # ← único acceso permitido
+        self.height += amount
+
+# ¿Qué pasa si alguien intenta hacer trampa?
+plant = Plant("Rose", 10.0, 5)
+# plant._stats._grow_calls = 999  # ⚠️ podría, pero viola encapsulación
+plant.grow(2.0)                    # ✅ forma correcta - grow() llama a record_grow()
+```
+
+### Beneficios de encapsular en este caso
+
+| Problema sin encapsulación | Solución con encapsulación |
+|---------------------------|---------------------------|
+| Alguien podría poner `grow_calls = 999` | Solo `record_grow()` lo incrementa |
+| Las estadísticas no serían fiables | El sistema es confiable |
+| Dificultad para depurar | La lógica está centralizada |
+
+## Encapsulación en `Tree.Stats`
+
+```python
+class Tree(Plant):
+    class Stats(Plant.Stats):
+        def __init__(self) -> None:
+            super().__init__()
+            self._shade_calls: int = 0   # ← encapsulado
+        
+        def record_shade(self) -> None:
+            """Única forma de incrementar el contador de shade"""
+            self._shade_calls += 1
+
+tree = Tree("Oak", 200.0, 365, 5.0)
+# tree._stats._shade_calls = 100  # ⚠️ mala práctica
+tree.produce_shade()               # ✅ correcto - llama a record_shade()
+```
+
+---
+
+# 2. POLIMORFISMO
+
+## ¿Qué es?
+
+El **polimorfismo** (del griego: "muchas formas") permite que **objetos de diferentes clases respondan al mismo mensaje (método) de forma distinta**.
+
+## Analogía simple
+
+Imagina el método `hacer_sonido()`:
+- Un `Perro` → "Guau"
+- Un `Gato` → "Miau"
+- Una `Vaca` → "Muu"
+
+**Todos responden al mismo método `hacer_sonido()`, pero cada uno a su manera.**
+
+## En Python: duck typing + herencia
+
+Python es polimórfico por naturaleza. Si un objeto tiene el método que necesitas, funciona.
+
+### Ejemplo básico
+
+```python
+class Perro:
+    def hacer_sonido(self) -> str:
+        return "Guau!"
+
+class Gato:
+    def hacer_sonido(self) -> str:
+        return "Miau!"
+
+class Vaca:
+    def hacer_sonido(self) -> str:
+        return "Muu!"
+
+# Función polimórfica - acepta CUALQUIER animal
+def animal_habla(animal) -> None:
+    print(animal.hacer_sonido())  # No le importa el tipo exacto
+
+# Todos funcionan igual
+animal_habla(Perro())  # Guau!
+animal_habla(Gato())   # Miau!
+animal_habla(Vaca())   # Muu!
+```
+
+## Polimorfismo en tu ejercicio (Plant, Flower, Tree, Seed)
+
+Este es un ejemplo **perfecto** de polimorfismo en tu proyecto:
+
+```python
+# Todas estas clases tienen el método show() - cada una implementado diferente
+plant = Plant("Generic", 10.0, 5)
+flower = Flower("Rose", 15.0, 10, "red")
+tree = Tree("Oak", 200.0, 365, 5.0)
+seed = Seed("Sunflower", 80.0, 45, "yellow", 0)
+
+# ✅ Misma llamada, resultados diferentes (polimorfismo)
+print(plant.show())  
+# Generic: 10.0cm, 5 days old
+
+print(flower.show())
+# Rose: 15.0cm, 10 days old
+# Color: red
+
+print(tree.show())
+# Oak: 200.0cm, 365 days old
+# Trunk diameter: 5.0cm
+
+print(seed.show())
+# Sunflower: 80.0cm, 45 days old
+# Color: yellow
+# Seeds: 0
+```
+
+## Función polimórfica (¡la del ejercicio 6!)
+
+```python
+def display_plant_stats(plant: Plant) -> None:
+    """
+    POLIMORFISMO PURO:
+    Esta función funciona con Plant, Flower, Tree, Seed, ANY planta.
+    No necesita saber qué tipo es exactamente.
+    """
+    print(f"[statistics for {plant.name}]")
+    print(plant.get_stats())  # ← cada clase tiene su propia implementación
+
+# ✅ TODAS funcionan igual con la Misma función
+display_plant_stats(Plant("Generic", 0, 0))
+display_plant_stats(Flower("Rose", 15, 10, "red"))
+display_plant_stats(Tree("Oak", 200, 365, 5.0))
+display_plant_stats(Seed("Sunflower", 80, 45, "yellow", 0))
+```
+
+## Sobrescritura de métodos (la base del polimorfismo)
+
+```python
+class Plant:
+    def grow(self, amount: float) -> None:
+        """Versión base"""
+        self.height += amount
+
+class Vegetable(Plant):
+    def grow(self, amount: float) -> None:
+        """Versión polimórfica - hace lo de Plant Y algo extra"""
+        super().grow(amount)               # ← reutiliza
+        self.nutritional_value += amount   # ← añade comportamiento
+
+# Mismo método, comportamiento diferente
+veg = Vegetable("Tomato", 5.0, 10, "April", 0)
+veg.grow(20.0)  # ¡esto aumenta height Y nutritional_value!
+```
+
+## Polimorfismo con `isinstance()` (NO recomendado)
+
+```python
+# ❌ ANTIPATRÓN - Rompe el polimorfismo
+def mostrar_planta(planta):
+    if isinstance(planta, Tree):
+        print("Es un árbol")
+    elif isinstance(planta, Flower):
+        print("Es una flor")
+    # Cada vez que añadas un tipo, hay que modificar esta función
+
+# ✅ BUENA PRÁCTICA - Polimorfismo real
+def mostrar_planta(planta):
+    print(planta.show())  # La propia planta sabe cómo mostrarse
+```
+
+## Tipos de polimorfismo en Python
+
+| Tipo | Descripción | Ejemplo en tu proyecto |
+|------|-------------|----------------------|
+| **Ad-hoc** (sobrecarga) | Python no tiene sobrecarga real | No aplica mucho |
+| **Paramétrico** (genéricos) | Usar `TypeVar` | Menos común |
+| **De subtipo** (herencia) | Mismo método, diferente implementación | `show()`, `grow()`, `age()` |
+| **Duck typing** | "Si camina como pato..." | `display_plant_stats()` |
+
+---
+
+# RESUMEN: Encapsulamiento vs Polimorfismo
+
+| Concepto | ¿Qué es? | ¿Para qué sirve? | ¿Cómo se hace en Python? |
+|----------|---------|-----------------|-------------------------|
+| **Encapsulamiento** | Ocultar datos internos | Proteger la integridad, controlar el acceso | `_protected`, `__private`, métodos getter/setter |
+| **Polimorfismo** | Muchas formas del mismo método | Código genérico que funciona con muchas clases | Sobrescritura de métodos, duck typing |
+
+## En una tabla visual
+
+```
+ENCAPSULAMIENTO                    POLIMORFISMO
+     │                                   │
+     │ "Mis datos son míos"              │ "Pueden actuar diferente"
+     ▼                                   ▼
+┌─────────────────┐                ┌─────────────────┐
+│   class Cuenta  │                │   animal.hablar │
+│     __saldo     │◄── protegido   │       │         │
+│     depositar() │                │       ▼         │
+│     retirar()   │                │  ┌─────┴─────┐   │
+└─────────────────┘                │  ▼         ▼   │
+                                   │ Perro    Gato  │
+                                   │ "Guau"   "Miau"│
+                                   └─────────────────┘
+```
+
+## En tu ejercicio 6
+
+```python
+class Plant:
+    class Stats:           # ← ENCAPSULAMIENTO (clase anidada)
+        def __init__(self):
+            self._grow_calls = 0   # ← ENCAPSULAMIENTO (protegido)
+    
+    def show(self) -> str:
+        return "..."       # ← POLIMORFISMO (sobrescrito por hijas)
+    
+    def get_stats(self) -> str:
+        return self._stats.display()  # ← ENCAPSULAMIENTO (acceso controlado)
+
+class Flower(Plant):
+    def show(self) -> str:           # ← POLIMORFISMO (implementación distinta)
+        return f"{super().show()}\nColor: {self.color}"
+
+# Función polimórfica
+def display_stats(plant: Plant):     # ← POLIMORFISMO (funciona con cualquier planta)
+    print(plant.get_stats())
+```
+
+---
+
+
+##################################################################################################
+##################################################################################################
+
+métodos estáticos, métodos de clase, y clases anidadas:
+
+
+---
+
+# PARTE 1: MÉTODOS NORMALES (repaso rápido)
+
+```python
+class Perro:
+    def __init__(self, nombre: str):
+        self.nombre = nombre
+    
+    def ladrar(self) -> str:
+        """Método normal - necesita self (la instancia)"""
+        return f"{self.nombre} dice Guau!"
+
+# Uso - necesitas una instancia
+mi_perro = Perro("Rex")
+print(mi_perro.ladrar())  # Rex dice Guau!
+```
+
+**Características:** necesita `self`, accede a los atributos de la instancia, solo funciona si tienes un objeto creado.
+
+---
+
+# PARTE 2: MÉTODOS ESTÁTICOS (`@staticmethod`)
+
+## ¿Qué son?
+
+Métodos que **NO necesitan ni `self` ni `cls`**. Son como **funciones normales**, pero viven dentro de una clase por organización.
+
+## Ejemplo sencillísimo
+
+```python
+class Matemáticas:
+    @staticmethod
+    def sumar(a: int, b: int) -> int:
+        """No uso self - solo recibo parámetros normales"""
+        return a + b
+    
+    @staticmethod
+    def es_par(numero: int) -> bool:
+        return numero % 2 == 0
+
+# Llamada - NO necesitas crear una instancia
+print(Matemáticas.sumar(3, 5))    # 8
+print(Matemáticas.es_par(7))       # False
+
+# También funciona desde instancia (pero no tiene sentido)
+m = Matemáticas()
+print(m.sumar(2, 2))  # 4 (funciona, pero es raro)
+```
+
+## Comparativa visual
+
+```python
+class Ejemplo:
+    def metodo_normal(self):
+        return f"Tengo self: {self}"
+    
+    @staticmethod
+    def metodo_estatico():
+        return "No tengo ni self ni cls"
+
+# Diferencia clave
+obj = Ejemplo()
+print(obj.metodo_normal())     # ✅ funciona
+print(Ejemplo.metodo_normal()) # ❌ ERROR! Falta self
+
+print(obj.metodo_estatico())   # ✅ funciona
+print(Ejemplo.metodo_estatico()) # ✅ funciona (¡esto es la gracia!)
+```
+
+## ¿Cuándo usar `@staticmethod`?
+
+| Situación | ¿Usar static? | Ejemplo |
+|-----------|---------------|---------|
+| La función NO necesita acceder a la instancia (`self`) | ✅ Sí | validar un email, convertir unidades |
+| La función NO necesita acceder a la clase (`cls`) | ✅ Sí | cálculos matemáticos |
+| La función necesita leer/modificar atributos del objeto | ❌ No | `self.nombre` |
+| La función necesita crear instancias de la clase | ❌ No (usa `@classmethod`) | fabricar objetos |
+
+## En tu ejercicio 6
+
+```python
+class Plant:
+    @staticmethod
+    def is_older_than_year(age: int) -> bool:
+        """NO necesita self porque solo trabaja con el parámetro age"""
+        return age > 365
+
+# Uso
+print(Plant.is_older_than_year(30))   # False - ¡sin crear ninguna planta!
+print(Plant.is_older_than_year(400))  # True
+
+# También funciona desde una instancia
+rose = Plant("Rose", 15.0, 10)
+print(rose.is_older_than_year(500))   # True (pero es confuso usarlo así)
+```
+
+**¿Por qué es `@staticmethod` y no una función normal fuera de la clase?** Porque está **relacionada conceptualmente** con las plantas. Es más organizado.
+
+---
+
+# PARTE 3: MÉTODOS DE CLASE (`@classmethod`)
+
+## ¿Qué son?
+
+Métodos que reciben **la clase** (`cls`) en lugar de la instancia (`self`). Se usan principalmente como **"fábricas"** para crear instancias de formas alternativas.
+
+## Ejemplo sencillísimo
+
+```python
+class Persona:
+    def __init__(self, nombre: str, edad: int):
+        self.nombre = nombre
+        self.edad = edad
+    
+    @classmethod
+    def crear_desconocido(cls) -> "Persona":
+        """Fábrica que crea una persona con valores por defecto"""
+        return cls("Desconocido", 0)
+    
+    @classmethod
+    def desde_anio_nacimiento(cls, nombre: str, anio: int) -> "Persona":
+        """Fábrica que calcula la edad automáticamente"""
+        edad_actual = 2026 - anio
+        return cls(nombre, edad_actual)
+
+# Uso
+p1 = Persona("Ana", 25)              # forma normal
+p2 = Persona.crear_desconocido()     # forma alternativa
+p3 = Persona.desde_anio_nacimiento("Luis", 1990)
+
+print(p2.nombre)  # Desconocido
+print(p3.edad)    # 36
+```
+
+## Comparativa visual
+
+```python
+class FabricanteDeCoches:
+    def __init__(self, marca: str, modelo: str):
+        self.marca = marca
+        self.modelo = modelo
+    
+    @classmethod
+    def crear_deportivo(cls) -> "FabricanteDeCoches":
+        """cls es la clase (FabricanteDeCoches)"""
+        return cls("Ferrari", "F40")
+    
+    @classmethod
+    def crear_familiar(cls) -> "FabricanteDeCoches":
+        return cls("Toyota", "Corolla")
+    
+    def normal(self):
+        return f"{self.marca} {self.modelo}"
+
+# Llamadas
+coche1 = FabricanteDeCoches.crear_deportivo()  # ✅ sin instancia
+coche2 = FabricanteDeCoches.crear_familiar()   # ✅ sin instancia
+# coche3 = FabricanteDeCoches.normal()         # ❌ ERROR (necesita self)
+
+print(coche1.marca)   # Ferrari
+print(coche2.marca)   # Toyota
+```
+
+## Diferencia clave: `@staticmethod` vs `@classmethod`
+
+```python
+class Ejemplo:
+    @staticmethod
+    def estatico():
+        return "NO sé qué clase me llamó"
+    
+    @classmethod
+    def de_clase(cls):
+        return f"SÉ que me llamó la clase {cls.__name__}"
+
+print(Ejemplo.estatico())   # NO sé qué clase me llamó
+print(Ejemplo.de_clase())   # SÉ que me llamó la clase Ejemplo
+
+# En herencia - ¡aquí se ve la diferencia!
+class Hija(Ejemplo):
+    pass
+
+print(Hija.estatico())      # NO sé qué clase me llamó (igual)
+print(Hija.de_clase())      # SÉ que me llamó la clase Hija  ← ¡importante!
+```
+
+## ¿Cuándo usar `@classmethod`?
+
+| Situación | ¿Usar classmethod? | Ejemplo |
+|-----------|-------------------|---------|
+| Necesitas crear una instancia de forma alternativa | ✅ Sí | `Persona.desde_nacimiento()` |
+| Necesitas saber qué clase está llamando (herencia) | ✅ Sí | fábricas que respetan herencia |
+| La operación afecta a toda la clase, no a una instancia | ✅ Sí | contador de instancias creadas |
+| Necesitas `self` | ❌ No | usa método normal |
+| Solo es una función de utilidad sin contexto de clase | ❌ No (usa `@staticmethod`) | `sumar(a, b)` |
+
+## En tu ejercicio 6
+
+```python
+class Plant:
+    def __init__(self, name: str, height: float, age: int):
+        self.name = name
+        self.height = height
+        self.age = age
+    
+    @classmethod
+    def create_anonymous(cls) -> "Plant":
+        """Crea una planta 'desconocida' sin nombre, altura 0, edad 0"""
+        return cls("Unknown plant", 0.0, 0)
+
+# Uso
+desconocida = Plant.create_anonymous()
+print(desconocida.name)   # Unknown plant
+
+# ¡Importante! Si heredas, funciona correctamente
+class Flower(Plant):
+    pass
+
+flor_anonima = Flower.create_anonymous()  # ← cls es Flower, no Plant
+```
+
+**¿Por qué no usar `@staticmethod` aquí?** Porque `@staticmethod` no sabría qué clase crear si heredas. `@classmethod` respeta la herencia.
+
+---
+
+# PARTE 4: CLASES ANIDADAS (Nested Classes)
+
+## ¿Qué son?
+
+Una clase **definida dentro de otra clase**. Se usa para agrupar lógica que **solo tiene sentido dentro de la clase principal**.
+
+## Ejemplo sencillísimo
+
+```python
+class Coche:
+    def __init__(self, marca: str):
+        self.marca = marca
+        self.motor = self.Motor()  # ← creamos una instancia de la clase anidada
+    
+    class Motor:
+        """Esta clase solo tiene sentido DENTRO de un coche"""
+        def __init__(self):
+            self.encendido = False
+        
+        def encender(self):
+            self.encendido = True
+            return "Motor encendido"
+        
+        def apagar(self):
+            self.encendido = False
+            return "Motor apagado"
+
+# Uso
+mi_coche = Coche("Toyota")
+print(mi_coche.motor.encender())  # Motor encendido
+print(mi_coche.motor.encendido)   # True
+
+# También puedes acceder desde fuera (pero es raro)
+motor_suelto = Coche.Motor()  # ← existe, pero no tiene sentido sin un coche
+```
+
+## ¿Por qué anidar clases?
+
+| Razón | Explicación |
+|-------|-------------|
+| **Organización** | Agrupar lógica relacionada |
+| **Encapsulación** | Ocultar detalles internos |
+| **Namespace** | Evitar conflictos de nombres |
+| **Relación lógica** | La clase anidada solo existe dentro de la externa |
+
+## Ejemplo más realista: `Stats` del ejercicio
+
+```python
+class Plant:
+    class Stats:
+        """Sistema de estadísticas - solo tiene sentido para una planta"""
+        def __init__(self):
+            self._grow_calls = 0
+            self._age_calls = 0
+            self._show_calls = 0
+        
+        def record_grow(self):
+            self._grow_calls += 1
+        
+        def display(self):
+            return f"Stats: {self._grow_calls} grow, {self._age_calls} age, {self._show_calls} show"
+    
+    def __init__(self, name: str):
+        self.name = name
+        self._stats = self.Stats()  # ← ¡aquí se usa la clase anidada!
+    
+    def grow(self):
+        self._stats.record_grow()   # ← se actualiza automáticamente
+    
+    def get_stats(self):
+        return self._stats.display()
+
+# Uso
+rose = Plant("Rose")
+rose.grow()
+rose.grow()
+print(rose.get_stats())  # Stats: 2 grow, 0 age, 0 show
+```
+
+## Comparativa: clase anidada vs clase separada
+
+```python
+# Opción 1: Clase separada (también válida)
+class PlantStats:
+    def __init__(self):
+        self.grow_calls = 0
+
+class Plant:
+    def __init__(self, name):
+        self.name = name
+        self._stats = PlantStats()  # ← usa clase externa
+
+# Opción 2: Clase anidada (ejercicio 6)
+class Plant:
+    class Stats:
+        def __init__(self):
+            self.grow_calls = 0
+    
+    def __init__(self, name):
+        self.name = name
+        self._stats = self.Stats()
+
+# ¿Cuál usar? En el ejercicio 6 se PIDE específicamente clase anidada
+```
+
+## Clase anidada con herencia (el caso complejo de `Tree`)
+
+```python
+class Plant:
+    class Stats:
+        def __init__(self):
+            self._grow_calls = 0
+        
+        def display(self):
+            return f"Grow calls: {self._grow_calls}"
+
+class Tree(Plant):
+    class Stats(Plant.Stats):  # ← ¡heredamos la clase anidada!
+        def __init__(self):
+            super().__init__()  # ← inicializa _grow_calls
+            self._shade_calls = 0
+        
+        def display(self):
+            base = super().display()
+            return f"{base}\nShade calls: {self._shade_calls}"
+    
+    def __init__(self, name):
+        super().__init__(name)
+        self._stats = self.Stats()  # ← usa Tree.Stats (no Plant.Stats)
+```
+
+---
+
+# PARTE 5: EL EJERCICIO 6 COMPLETO EXPLICADO LÍNEA POR LÍNEA
+
+## Lo que pide el enunciado (traducido)
+
+> 1. Crear un método estático en Plant que compruebe si una edad es mayor de un año
+> 2. Crear un método de clase en Plant que cree una planta "anónima"
+> 3. Crear clase Seed que hereda de Flower, con contador de semillas
+> 4. Cada planta tiene un sistema interno (clase anidada) para estadísticas
+> 5. Trees necesitan estadística extra (llamadas a produce_shade)
+> 6. Función independiente que muestre estadísticas de cualquier planta
+
+## Código completo explicado
+
+```python
+# ============================================================
+# PARTE A: Clase base Plant (con static y classmethod)
+# ============================================================
+
+class Plant:
+    # ---------- CLASE ANIDADA (punto 4) ----------
+    class Stats:
+        """Sistema interno de estadísticas - encapsulado"""
+        def __init__(self):
+            self._grow_calls = 0
+            self._age_calls = 0
+            self._show_calls = 0
+        
+        def record_grow(self):
+            self._grow_calls += 1
+        
+        def record_age(self):
+            self._age_calls += 1
+        
+        def record_show(self):
+            self._show_calls += 1
+        
+        def display(self) -> str:
+            return f"Stats: {self._grow_calls} grow, {self._age_calls} age, {self._show_calls} show"
+    
+    # ---------- MÉTODO NORMAL ----------
+    def __init__(self, name: str, height: float, age: int):
+        self.name = name
+        self.height = height
+        self.age = age
+        self._stats = self.Stats()  # ← instancia de la clase anidada
+    
+    # ---------- MÉTODOS NORMALES (registran estadísticas) ----------
+    def grow(self, amount: float):
+        self._stats.record_grow()   # ← registra automáticamente
+        self.height += amount
+    
+    def age(self, days: int):
+        self._stats.record_age()
+        self.age += days
+    
+    def show(self) -> str:
+        self._stats.record_show()
+        return f"{self.name}: {self.height}cm, {self.age} days old"
+    
+    def get_stats(self) -> str:
+        return self._stats.display()
+    
+    # ---------- MÉTODO ESTÁTICO (punto 1) ----------
+    @staticmethod
+    def is_older_than_year(age: int) -> bool:
+        """NO usa self - solo opera con el parámetro que recibe"""
+        return age > 365
+    
+    # ---------- MÉTODO DE CLASE (punto 2) ----------
+    @classmethod
+    def create_anonymous(cls) -> "Plant":
+        """Usa cls (la clase) para crear una instancia"""
+        return cls("Unknown plant", 0.0, 0)
+
+
+# ============================================================
+# PARTE B: Flower (hereda de Plant)
+# ============================================================
+
+class Flower(Plant):
+    def __init__(self, name: str, height: float, age: int, color: str):
+        super().__init__(name, height, age)
+        self.color = color
+        self._bloomed = False
+    
+    def bloom(self) -> str:
+        self._bloomed = True
+        return f"{self.name} is blooming beautifully!"
+    
+    def show(self) -> str:
+        base = super().show()
+        return f"{base}\nColor: {self.color}"
+
+
+# ============================================================
+# PARTE C: Tree (con estadística extra - punto 5)
+# ============================================================
+
+class Tree(Plant):
+    # Heredamos la clase Stats y la extendemos
+    class Stats(Plant.Stats):
+        def __init__(self):
+            super().__init__()
+            self._shade_calls = 0
+        
+        def record_shade(self):
+            self._shade_calls += 1
+        
+        def display(self) -> str:
+            base = super().display()
+            return f"{base}\n{self._shade_calls} shade"
+    
+    def __init__(self, name: str, height: float, age: int, trunk_diameter: float):
+        super().__init__(name, height, age)
+        self.trunk_diameter = trunk_diameter
+        # ¡Importante! Reemplazamos _stats con nuestra versión extendida
+        self._stats = self.Stats()
+    
+    def produce_shade(self) -> str:
+        self._stats.record_shade()  # ← estadística EXTRA solo para árboles
+        return f"Tree {self.name} now produces a shade of {self.height}cm long and {self.trunk_diameter}cm wide."
+    
+    def show(self) -> str:
+        base = super().show()
+        return f"{base}\nTrunk diameter: {self.trunk_diameter}cm"
+
+
+# ============================================================
+# PARTE D: Seed (hereda de Flower - punto 3)
+# ============================================================
+
+class Seed(Flower):
+    def __init__(self, name: str, height: float, age: int, color: str, seeds: int = 0):
+        super().__init__(name, height, age, color)
+        self.seeds = seeds
+    
+    def bloom(self) -> str:
+        super().bloom()  # ← llama bloom() de Flower
+        self.seeds = 42  # ← al bloomar, produce semillas
+        return f"{self.name} is blooming beautifully!"
+    
+    def show(self) -> str:
+        base = super().show()
+        return f"{base}\nSeeds: {self.seeds}"
+
+
+# ============================================================
+# PARTE E: Función independiente (punto 6)
+# ============================================================
+
+def display_plant_stats(plant: Plant) -> None:
+    """POLIMORFISMO - funciona con Plant, Flower, Tree, Seed"""
+    print(f"[statistics for {plant.name}]")
+    print(plant.get_stats())
+```
+
+---
+
+# PARTE 6: ¿PARA QUÉ USARÉ ESTO EN EL FUTURO?
+
+## `@staticmethod` - cuándo lo usarás
+
+```python
+# ✅ Validación de datos
+class Usuario:
+    @staticmethod
+    def email_valido(email: str) -> bool:
+        return "@" in email and "." in email.split("@")[1]
+
+# ✅ Conversión de unidades
+class Conversor:
+    @staticmethod
+    def celsius_a_fahrenheit(c: float) -> float:
+        return c * 9/5 + 32
+
+# ✅ Utilidades matemáticas
+class Vector:
+    @staticmethod
+    def producto_punto(v1: tuple, v2: tuple) -> float:
+        return sum(a * b for a, b in zip(v1, v2))
+```
+
+## `@classmethod` - cuándo lo usarás
+
+```python
+# ✅ Fábricas alternativas
+class Fecha:
+    def __init__(self, anio: int, mes: int, dia: int):
+        self.anio = anio
+        self.mes = mes
+        self.dia = dia
+    
+    @classmethod
+    def desde_string(cls, fecha_str: str) -> "Fecha":
+        """Crea una fecha desde "2024-01-15" """
+        anio, mes, dia = map(int, fecha_str.split("-"))
+        return cls(anio, mes, dia)
+    
+    @classmethod
+    def hoy(cls) -> "Fecha":
+        """Crea la fecha actual"""
+        from datetime import date
+        hoy = date.today()
+        return cls(hoy.year, hoy.month, hoy.day)
+
+# Uso
+f1 = Fecha.desde_string("2024-01-15")
+f2 = Fecha.hoy()
+```
+
+```python
+# ✅ Patrón Singleton
+class ConexionBD:
+    _instancia = None
+    
+    def __new__(cls):
+        if cls._instancia is None:
+            cls._instancia = super().__new__(cls)
+        return cls._instancia
+    
+    @classmethod
+    def obtener_conexion(cls) -> "ConexionBD":
+        return cls()
+```
+
+```python
+# ✅ Contador de instancias
+class Animal:
+    contador = 0
+    
+    def __init__(self, nombre):
+        self.nombre = nombre
+        Animal.contador += 1
+    
+    @classmethod
+    def cuantos_animales(cls) -> int:
+        return cls.contador
+```
+
+## Clases anidadas - cuándo las usarás
+
+```python
+# ✅ Objetos de configuración
+class Servidor:
+    class Configuracion:
+        def __init__(self):
+            self.puerto = 8080
+            self.host = "localhost"
+            self.debug = True
+    
+    def __init__(self):
+        self.config = self.Configuracion()
+
+# ✅ Nodos de estructuras de datos
+class ListaEnlazada:
+    class Nodo:
+        def __init__(self, valor):
+            self.valor = valor
+            self.siguiente = None
+    
+    def __init__(self):
+        self.cabeza = None
+
+# ✅ Iteradores internos
+class Coleccion:
+    def __iter__(self):
+        return self.Iterador(self)
+    
+    class Iterador:
+        def __init__(self, coleccion):
+            self.coleccion = coleccion
+            self.posicion = 0
+```
+
+---
+
+# PARTE 7: TABLA RESUMEN FINAL
+
+| Concepto | Sintaxis | Recibe | Accede a | ¿Crea instancias? | Ejemplo de uso |
+|----------|----------|--------|----------|-------------------|----------------|
+| **Método normal** | `def metodo(self)` | `self` | atributos de instancia | No | `planta.grow()` |
+| **Método estático** | `@staticmethod` `def metodo()` | nada | nada | No | `Plant.is_older_than_year(400)` |
+| **Método de clase** | `@classmethod` `def metodo(cls)` | `cls` | atributos de clase | ✅ Sí | `Plant.create_anonymous()` |
+| **Clase anidada** | `class Stats:` dentro de otra clase | - | - | ✅ Sí | `self._stats = self.Stats()` |
+
+---
+
+¿Ahora tiene más sentido? ¿Quieres que profundice en alguna parte específica o que hagamos un mini-ejercicio práctico juntos?
+
